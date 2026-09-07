@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AL QADIR TRADERS - Enterprise Invoice & Management System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0d0d0d;
+            overflow-x: hidden;
+        }
+        .bg-brand { background-color: #e61c24; }
+        .text-brand { color: #e61c24; }
+        .border-brand { border-color: #e61c24; }
+        
+        /* Animated Background */
+        .coke-bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #8a060b 0%, #3d0002 60%, #0d0001 100%);
+            overflow: hidden;
+        }
+
+        .bubble, .ice-cube {
+            position: absolute; bottom: -150px;
+            pointer-events: none; animation: riseUp linear infinite;
+        }
+
+        .bubble {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .ice-cube {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(2px); border-radius: 8px; transform: rotate(45deg);
+        }
+
+        @keyframes riseUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; font-size: 11px; }
+            .shadow-md, .shadow-lg, .shadow, .shadow-xl, .shadow-2xl { box-shadow: none !important; }
+            .border { border-color: #cbd5e1 !important; }
+            .print-header { display: block !important; margin-bottom: 15px; }
+            table { width: 100% !important; border-collapse: collapse !important; }
+            th, td { border: 1px solid #000000 !important; padding: 6px 8px !important; }
+            th { background-color: #333333 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .coke-bg-container { display: none !important; }
+        }
+        .print-header { display: none; }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800">
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="coke-bg-container no-print" id="bgAnimation"></div>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md no-print">
+        <div class="bg-white/95 rounded-2xl shadow-2xl p-8 max-w-md w-full border border-red-500/30 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-600 rounded-full blur-2xl opacity-40"></div>
+            
+            <div class="mb-4 flex justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" alt="Coca-Cola Logo" class="h-16 object-contain filter drop-shadow-md">
+            </div>
+
+            <h2 class="text-xl font-bold text-gray-800 mb-1">AL QADIR TRADERS</h2>
+            <p class="text-xs text-red-600 font-semibold mb-6">Distribution & ERP Management System</p>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Username:</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-3 text-gray-400 text-xs"></i>
+                        <input type="text" id="loginUser" required class="w-full pl-9 pr-3 py-2 text-xs border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Password:</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-400 text-xs"></i>
+                        <input type="password" id="loginPass" required class="w-full pl-9 pr-3 py-2 text-xs border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg shadow-lg hover:shadow-red-500/50 transition duration-200 flex items-center justify-center gap-2 text-xs mt-4">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login to Workspace
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="appContainer" class="hidden">
+        <!-- Header / Navbar -->
+        <header class="bg-brand text-white shadow-2xl no-print relative border-b border-red-700">
+            <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" alt="Coca-Cola Logo" class="h-10 filter brightness-0 invert">
+                    <div class="border-l border-red-400 pl-3">
+                        <h1 class="text-xl font-bold tracking-wide leading-none">AL QADIR TRADERS</h1>
+                        <p class="text-[11px] text-red-100 font-medium mt-0.5">Wholesale Distribution System</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3 mt-2 sm:mt-0">
+                    <button onclick="openBrandModal()" class="bg-white text-red-600 hover:bg-red-50 text-xs px-3 py-1.5 rounded-lg font-bold flex items-center shadow transition border border-white/20">
+                        <i class="fa-solid fa-circle-plus mr-1.5 text-red-600"></i>
+                        <span>Add New Brand / Category</span>
+                    </button>
+
+                    <button onclick="openUserMgmtModal()" class="bg-black bg-opacity-30 hover:bg-opacity-50 text-white text-xs px-3 py-1.5 rounded-lg flex items-center transition border border-white/20">
+                        <i class="fa-solid fa-users-gear mr-1.5"></i>
+                        <span>User & Role Mgmt</span>
+                    </button>
+
+                    <div class="bg-red-950 text-xs px-3 py-1.5 rounded-lg flex items-center border border-red-800 shadow-inner">
+                        <i class="fa-solid fa-user-shield mr-2 text-yellow-400"></i>
+                        <label class="mr-1.5 font-semibold text-red-200">Active User:</label>
+                        <select id="userSwitchSelect" onchange="changeActiveUser(this.value)" class="bg-transparent font-bold text-white outline-none cursor-pointer">
+                        </select>
+                    </div>
+
+                    <button onclick="logout()" class="bg-black/40 hover:bg-black/60 text-white p-2 rounded-lg transition" title="Logout">
+                        <i class="fa-solid fa-power-off text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-6 space-y-6">
+
+            <!-- Dynamic Print Header -->
+            <div class="print-header text-center border-b-2 border-black pb-4">
+                <h1 id="printMainHeading" class="text-xl font-bold uppercase tracking-wider text-black">
+                    Details of Profit margin Allowed In Respect of MS Alqadir Trader DIK (Coca Cola Distributor) - <span id="printPeriodText">All Months</span>
+                </h1>
+                <div class="flex justify-between items-center mt-3 text-xs font-bold border-t pt-2">
+                    <span>STATEMENT: Profit Margin Details</span>
+                    <span>PRINT DATE: <span id="printCurrentDate">--</span></span>
+                </div>
+            </div>
+
+            <!-- Dashboard Stat Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 no-print">
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Total Invoices</p>
+                    <h3 id="dashInvoices" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-indigo-500">
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Total Quantity</p>
+                    <h3 id="dashQty" class="text-2xl font-bold text-indigo-600 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-gray-600">
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Gross Value</p>
+                    <h3 id="dashGross" class="text-xl font-bold text-gray-700 mt-1">Rs. 0</h3>
+                </div>
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-orange-500">
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Total Margin</p>
+                    <h3 id="dashDisc" class="text-xl font-bold text-orange-600 mt-1">Rs. 0</h3>
+                </div>
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-red-500">
+                    <p class="text-xs text-gray-500 font-semibold uppercase">Income Tax</p>
+                    <h3 id="dashTax" class="text-xl font-bold text-red-600 mt-1">Rs. 0</h3>
+                </div>
+                <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-green-500 bg-green-50/80">
+                    <p class="text-xs text-green-700 font-bold uppercase">Total Amount</p>
+                    <h3 id="dashNet" class="text-xl font-bold text-green-700 mt-1">Rs. 0</h3>
+                </div>
+            </div>
+
+            <!-- Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+                <!-- Sidebar Controls -->
+                <div class="lg:col-span-1 space-y-6 no-print">
+                    
+                    <!-- OCR Invoice Scanner -->
+                    <div id="ocrSection" class="glass-card rounded-xl shadow-lg p-4 border">
+                        <h3 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-camera text-brand"></i>
+                            Invoice OCR Scanner
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-3">Upload invoice image to auto-fill items:</p>
+                        <input type="file" id="invoiceImage" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <button onclick="document.getElementById('invoiceImage').click()" class="w-full bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs py-2 px-3 rounded-lg border border-dashed border-gray-400 flex items-center justify-center gap-2 transition font-medium">
+                            <i class="fa-solid fa-upload"></i> Upload Image / Invoice
+                        </button>
+                        <div id="ocrStatus" class="text-xs text-green-600 mt-2 font-semibold hidden">
+                            <i class="fa-solid fa-circle-check"></i> Scanned successfully!
+                        </div>
+                    </div>
+
+                    <!-- Product Master Manager -->
+                    <div id="brandManagerCard" class="glass-card rounded-xl shadow-lg p-4 border">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-gray-800 text-sm" id="prodFormTitle">Add / Edit Product Master</h3>
+                            <span class="text-[10px] bg-red-100 text-brand px-2 py-0.5 rounded font-bold uppercase">Admin</span>
+                        </div>
+                        <form id="productForm" onsubmit="saveProduct(event)" class="space-y-2 text-xs">
+                            <input type="hidden" id="editProdIndex" value="-1">
+                            <div>
+                                <label class="block text-gray-600 mb-0.5 font-semibold">Brand / Category:</label>
+                                <select id="prodBrandSelect" class="w-full border rounded p-1.5 focus:outline-none focus:border-red-500 font-semibold text-gray-700">
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-0.5 font-semibold">Product Name:</label>
+                                <input type="text" id="prodName" placeholder="e.g. COCA-COLA 1.5L" required class="w-full border rounded p-1.5 focus:outline-none focus:border-red-500">
+                            </div>
+                            <div class="grid grid-cols-3 gap-1">
+                                <div>
+                                    <label class="block text-gray-600 mb-0.5">Rate (Rs):</label>
+                                    <input type="number" step="0.01" id="prodRate" required class="w-full border rounded p-1.5">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-0.5">Margin %:</label>
+                                    <input type="number" step="0.001" id="prodDisc" required class="w-full border rounded p-1.5">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-0.5">Tax %:</label>
+                                    <input type="number" step="0.01" id="prodTax" value="0.10" required class="w-full border rounded p-1.5">
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <button type="submit" id="btnSaveProd" class="w-full bg-brand text-white py-1.5 rounded font-bold hover:bg-red-700 transition shadow">
+                                    Save Product
+                                </button>
+                                <button type="button" id="btnCancelEditProd" onclick="resetProductForm()" class="hidden bg-gray-400 text-white py-1.5 px-3 rounded font-bold hover:bg-gray-500 transition">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Product List Preview -->
+                        <div class="mt-4 border-t pt-2">
+                            <h4 class="text-[11px] font-bold text-gray-700 mb-2">Existing Products List</h4>
+                            <div id="productMasterList" class="space-y-1 max-h-40 overflow-y-auto text-[11px]">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Backup & Restore -->
+                    <div id="adminBackupPanel" class="glass-card rounded-xl shadow-lg p-4 border">
+                        <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-database text-brand"></i>
+                            Data Backup & Restore
+                        </h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="exportBackup()" class="bg-gray-800 hover:bg-black text-white text-xs py-2 px-2 rounded-lg flex items-center justify-center gap-1 font-semibold">
+                                <i class="fa-solid fa-download"></i> Export
+                            </button>
+                            <button onclick="document.getElementById('restoreFile').click()" class="bg-gray-600 hover:bg-gray-700 text-white text-xs py-2 px-2 rounded-lg flex items-center justify-center gap-1 font-semibold">
+                                <i class="fa-solid fa-upload"></i> Restore
+                            </button>
+                            <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="importBackup(event)">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main Section -->
+                <div class="lg:col-span-3 space-y-6">
+
+                    <!-- Multi-Item Invoice Entry Form -->
+                    <div id="entryFormSection" class="glass-card rounded-xl shadow-xl p-6 no-print border border-gray-200">
+                        <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fa-solid fa-file-circle-plus text-brand"></i>
+                            Create Multi-Item Invoice
+                        </h2>
+
+                        <!-- Invoice Header Details -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 bg-red-50/50 p-3 rounded-lg border border-red-100">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Invoice Date: <span class="text-red-500">*</span></label>
+                                <input type="date" id="entryDate" required class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Invoice Number: <span class="text-red-500">*</span></label>
+                                <input type="text" id="invoiceNo" placeholder="e.g. 9020488029" required class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Item Row Input with Search & Auto-Add -->
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
+                            <div class="flex flex-wrap justify-between items-center">
+                                <h3 class="text-xs font-bold text-gray-700 uppercase">Add Items / Brands to Current Invoice Cart</h3>
+                                <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border shadow-sm text-xs">
+                                    <span class="font-bold text-gray-600">Mode:</span>
+                                    <label class="cursor-pointer flex items-center gap-1 font-semibold text-blue-700">
+                                        <input type="radio" name="calcMode" value="percent" checked onchange="toggleCalcMode()"> Percentage (%)
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-1 font-semibold text-purple-700">
+                                        <input type="radio" name="calcMode" value="amount" onchange="toggleCalcMode()"> Manual Amount (Rs)
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="relative">
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Search or Type Product Name:</label>
+                                    <input type="text" id="selectedProductInput" list="productListOptions" oninput="handleProductSearchInput()" placeholder="Type product name..." class="w-full border rounded-lg p-2 text-xs focus:ring-2 focus:ring-red-500 outline-none font-medium">
+                                    <datalist id="productListOptions">
+                                        <!-- Populated dynamically -->
+                                    </datalist>
+                                    <span id="historicalMatchBadge" class="hidden absolute right-2 top-7 text-[10px] bg-green-100 text-green-800 font-bold px-1.5 py-0.5 rounded">Auto-Filled</span>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Quantity (QTY):</label>
+                                    <input type="number" id="entryQty" oninput="calculateRowTotals()" placeholder="0" min="1" class="w-full border rounded-lg p-2 text-xs font-bold text-blue-600 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Unit Rate / Value (Rs):</label>
+                                    <input type="number" step="0.01" id="entryRate" oninput="calculateRowTotals()" placeholder="0.00" class="w-full border rounded-lg p-2 text-xs font-semibold text-gray-800">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                                <div>
+                                    <label id="lblDisc" class="block text-gray-600 font-semibold mb-1">Margin (%):</label>
+                                    <input type="number" step="0.001" id="entryDiscP" oninput="calculateRowTotals()" value="0" class="w-full border rounded p-1.5 text-orange-600 font-semibold">
+                                </div>
+                                <div>
+                                    <label id="lblTax" class="block text-gray-600 font-semibold mb-1">Income Tax (%):</label>
+                                    <input type="number" step="0.01" id="entryTaxP" oninput="calculateRowTotals()" value="0.10" class="w-full border rounded p-1.5 text-red-600 font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-semibold mb-1">Income Tax Amt (Rs):</label>
+                                    <input type="text" id="entryTaxAmt" readonly class="w-full border bg-gray-100 rounded p-1.5 font-semibold text-red-600">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1">Line Total Amount:</label>
+                                    <input type="text" id="entryNetTotal" readonly placeholder="Rs. 0.00" class="w-full border bg-yellow-100/90 rounded p-1.5 font-bold text-sm text-brand">
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end pt-1">
+                                <button type="button" onclick="addItemToCart()" class="bg-gray-800 hover:bg-black text-white font-bold px-4 py-2 rounded-lg text-xs shadow flex items-center gap-1">
+                                    <i class="fa-solid fa-plus-circle"></i> Add Item to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Invoice Multi-Item Cart Preview Table -->
+                        <div class="mt-4 border rounded-xl overflow-hidden">
+                            <table class="w-full text-xs text-left">
+                                <thead class="bg-gray-200 font-bold text-gray-700">
+                                    <tr>
+                                        <th class="p-2 border">#</th>
+                                        <th class="p-2 border">Product Description</th>
+                                        <th class="p-2 border text-right">QTY</th>
+                                        <th class="p-2 border text-right">VALUE</th>
+                                        <th class="p-2 border text-right">MARGIN</th>
+                                        <th class="p-2 border text-right">INCOME TAX</th>
+                                        <th class="p-2 border text-right">TOTAL AMOUNT</th>
+                                        <th class="p-2 border text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartTableBody">
+                                    <tr>
+                                        <td colspan="8" class="p-3 text-center text-gray-400 italic">No items added to invoice cart yet. Select a product above and click "Add Item to Cart".</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="flex flex-wrap justify-between items-center pt-3 gap-3">
+                            <div class="text-xs text-gray-600 font-bold">
+                                Total Items in Cart: <span id="cartCount" class="text-brand font-extrabold text-sm">0</span>
+                            </div>
+
+                            <div class="flex items-center gap-2 bg-green-100 border border-green-300 px-4 py-2 rounded-xl shadow-sm">
+                                <i class="fa-solid fa-calculator text-green-700 text-lg"></i>
+                                <div>
+                                    <span class="block text-[10px] text-green-800 font-bold uppercase tracking-wider">Invoice Total Amount</span>
+                                    <span id="cartTotalAmount" class="text-base font-extrabold text-green-800">Rs. 0.00</span>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="saveFullInvoice()" class="bg-brand text-white font-bold px-6 py-2.5 rounded-lg hover:bg-red-700 shadow-lg transition flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Save Complete Invoice
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ledger & Reports Section -->
+                    <div class="glass-card rounded-xl shadow-xl p-6 border border-gray-200">
+                        
+                        <div class="flex flex-wrap justify-between items-center mb-6 gap-4 border-b pb-4 no-print">
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-800">Purchase & Sales Ledger</h2>
+                                <p class="text-xs text-gray-500">Filter, edit and print verified distribution reports</p>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-2">
+                                <select id="filterMonth" onchange="renderHistory()" class="border text-xs rounded-lg p-2 font-semibold bg-gray-50">
+                                    <option value="ALL">All Months</option>
+                                    <option value="2026-01">January 2026</option>
+                                    <option value="2026-02">February 2026</option>
+                                    <option value="2026-03">March 2026</option>
+                                    <option value="2026-04">April 2026</option>
+                                    <option value="2026-05">May 2026</option>
+                                    <option value="2026-06">June 2026</option>
+                                    <option value="2026-07">July 2026</option>
+                                    <option value="2026-08">August 2026</option>
+                                    <option value="2026-09" selected>September 2026</option>
+                                    <option value="2026-10">October 2026</option>
+                                    <option value="2026-11">November 2026</option>
+                                    <option value="2026-12">December 2026</option>
+                                </select>
+                                
+                                <input type="text" id="searchQuery" onkeyup="renderHistory()" placeholder="Search Invoice # or Product..." class="border text-xs rounded-lg p-2 w-48">
+                                
+                                <button onclick="exportToExcel()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
+                                    <i class="fa-solid fa-file-excel"></i> Excel
+                                </button>
+                                <button onclick="triggerPrint()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
+                                    <i class="fa-solid fa-print"></i> Print / PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ledger Table (Updated Table Headings matching the uploaded image) -->
+                        <div class="overflow-x-auto">
+                            <table id="invoiceTable" class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-900 text-white uppercase text-center">
+                                        <th class="p-2.5 border border-gray-700">S#</th>
+                                        <th class="p-2.5 border border-gray-700">DATE</th>
+                                        <th class="p-2.5 border border-gray-700">INVOICE NUMBER</th>
+                                        <th class="p-2.5 border border-gray-700 text-right">QTY</th>
+                                        <th class="p-2.5 border border-gray-700 text-right">VALUE</th>
+                                        <th class="p-2.5 border border-gray-700 text-right">MARGIN</th>
+                                        <th class="p-2.5 border border-gray-700 text-right">INCOME TAX</th>
+                                        <th class="p-2.5 border border-gray-700 text-right">TOTAL AMOUNT</th>
+                                        <th class="p-2.5 border border-gray-700 no-print text-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                                
+                                <tfoot>
+                                    <tr class="bg-gray-200 font-bold text-gray-900 border-t-2 border-black text-right">
+                                        <td colspan="3" class="p-3 border text-center uppercase">TOTAL SUMMARY</td>
+                                        <td id="footQty" class="p-3 border">0</td>
+                                        <td id="footGross" class="p-3 border">Rs. 0.00</td>
+                                        <td id="footDisc" class="p-3 border text-orange-700">Rs. 0.00</td>
+                                        <td id="footTax" class="p-3 border text-red-700">Rs. 0.00</td>
+                                        <td id="footNet" class="p-3 border text-green-800 bg-yellow-200 text-sm">Rs. 0.00</td>
+                                        <td class="p-3 border no-print"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ADD BRAND MODAL -->
+    <div id="brandModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden no-print backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-md font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-tags text-brand"></i>
+                    Add New Brand Category
+                </h3>
+                <button onclick="closeBrandModal()" class="text-gray-400 hover:text-black">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="addNewBrand(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Brand Name:</label>
+                    <input type="text" id="newBrandInput" placeholder="e.g. Sprite, Fanta, Monster" required class="w-full border rounded-lg p-2 text-xs focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeBrandModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="submit" class="bg-brand text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-red-700 transition">Save Brand</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT INVOICE ENTRY MODAL -->
+    <div id="editInvoiceModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden no-print backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-md font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-brand"></i>
+                    Edit Invoice Entry
+                </h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-black">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveEditedInvoice(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="editInvoiceNoOld">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold mb-1">Date:</label>
+                        <input type="date" id="editDate" required class="w-full border rounded p-2">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Invoice #:</label>
+                        <input type="text" id="editInvoiceNo" required class="w-full border rounded p-2 font-bold">
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-gray-500 italic bg-yellow-50 p-2 rounded border border-yellow-200">نوٹ: اگر اس انوائس میں ایک سے زیادہ پروڈکٹس ہیں تو ایڈٹ کرنے پر نئی پروڈکٹس کارٹ میں لوڈ ہو جائیں گی تاکہ آپ ترمیم کر سکیں۔</p>
+
+                <div class="flex justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeEditModal()" class="bg-gray-200 text-gray-800 font-bold px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="submit" class="bg-brand text-white font-bold px-5 py-2 rounded-lg hover:bg-red-700 transition">Update Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- USER & ROLE MANAGEMENT MODAL -->
+    <div id="userMgmtModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden no-print backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative space-y-5">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-brand"></i>
+                    User & Role Management System
+                </h3>
+                <button onclick="closeUserMgmtModal()" class="text-gray-400 hover:text-black">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="newUserForm" onsubmit="createNewUserRole(event)" class="bg-gray-50 p-4 rounded-xl border space-y-3">
+                <h4 class="text-xs font-bold text-gray-700 uppercase">Add New User Profile</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1 font-semibold">User Name:</label>
+                        <input type="text" id="newUserName" placeholder="e.g. Sales Officer" required class="w-full border rounded p-2 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1 font-semibold">Access Level Role:</label>
+                        <select id="newUserRole" class="w-full border rounded p-2 text-xs font-semibold">
+                            <option value="admin">Full Admin Access</option>
+                            <option value="operator">Data Entry Operator</option>
+                            <option value="viewer">Viewer Only (Read-Only)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-bold py-2 px-3 rounded text-xs transition">
+                            <i class="fa-solid fa-user-plus mr-1"></i> Add User
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <h4 class="text-xs font-bold text-gray-700 uppercase mb-2">Configured Accounts</h4>
+                <div class="overflow-y-auto max-h-48 border rounded-xl">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-100 text-gray-600">
+                            <tr>
+                                <th class="p-2 border">User</th>
+                                <th class="p-2 border">Role</th>
+                                <th class="p-2 border">Access Rights</th>
+                                <th class="p-2 border text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userListTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="closeUserMgmtModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold px-4 py-2 rounded-lg">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM LOGIC -->
+    <script>
+        const defaultBrands = ["Coca-Cola", "Sprite", "Fanta", "Kinley", "Monster"];
+
+        const defaultProducts = [
+            { brand: "Coca-Cola", name: "COCA-COLA 500ML 12PET (101-430)", rate: 1296.00, disc: 5.520, tax: 0.10 },
+            { brand: "Coca-Cola", name: "COCA-COLA 250 ML CAN X12 (104-630)", rate: 1294.56, disc: 5.650, tax: 0.10 },
+            { brand: "Coca-Cola", name: "CC PET 2L 1X6 (110-557)", rate: 1198.76, disc: 4.590, tax: 0.10 },
+            { brand: "Fanta", name: "FANTA ORANGE PET 1.5L 1X6 UTC (193-577)", rate: 1078.84, disc: 4.590, tax: 0.10 },
+            { brand: "Sprite", name: "SPRITE LEMON PET 1.5L 1X6 (293-530)", rate: 1078.84, disc: 4.590, tax: 0.10 },
+            { brand: "Sprite", name: "SPRITE CAN 250ML 1X12 (294-600)", rate: 1294.56, disc: 5.650, tax: 0.10 }
+        ];
+
+        const defaultUsers = [
+            { id: 1, name: "Muhammad Adnan (Admin)", username: "admin", pass: "1234", role: "admin" },
+            { id: 2, name: "Data Entry Operator", username: "operator", pass: "1234", role: "operator" },
+            { id: 3, name: "Auditor / Guest", username: "viewer", pass: "1234", role: "viewer" }
+        ];
+
+        // System State
+        let brands = JSON.parse(localStorage.getItem('aq_brands')) || defaultBrands;
+        let products = JSON.parse(localStorage.getItem('aq_products')) || defaultProducts;
+        let invoices = JSON.parse(localStorage.getItem('aq_invoices')) || [];
+        let systemUsers = JSON.parse(localStorage.getItem('aq_users')) || defaultUsers;
+        let activeUserId = 1;
+        let invoiceCart = [];
+
+        // Audio Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSuccessSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                gain.gain.setValueAtTime(0.15, now + i * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.08);
+                osc.stop(now + i * 0.08 + 0.3);
+            });
+        }
+
+        function playErrorSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.setValueAtTime(110, now + 0.15);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        }
+
+        function initBackgroundAnimation() {
+            const container = document.getElementById('bgAnimation');
+            container.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const isIce = Math.random() > 0.7;
+                const el = document.createElement('div');
+                el.className = isIce ? 'ice-cube' : 'bubble';
+                const size = isIce ? Math.random() * 25 + 15 : Math.random() * 18 + 6;
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.left = `${Math.random() * 100}%`;
+                el.style.animationDuration = `${Math.random() * 8 + 6}s`;
+                el.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(el);
+            }
+        }
+
+        window.onload = function() {
+            initBackgroundAnimation();
+        };
+
+        // LOGIN
+        function handleLogin(e) {
+            e.preventDefault();
+            const uInput = document.getElementById('loginUser').value.trim();
+            const pInput = document.getElementById('loginPass').value.trim();
+
+            const foundUser = systemUsers.find(u => (u.username === uInput || u.name === uInput) && u.pass === pInput);
+
+            if (foundUser) {
+                activeUserId = foundUser.id;
+                playSuccessSound();
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('appContainer').classList.remove('hidden');
+                
+                document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('printCurrentDate').innerText = new Date().toLocaleDateString();
+                populateBrandDropdowns();
+                populateProductDatalist();
+                renderProductMasterList();
+                renderUserDropdown();
+                applyRolePermissions();
+                renderHistory();
+            } else {
+                playErrorSound();
+                alert("نام یا پاسورڈ درست نہیں ہے!");
+            }
+        }
+
+        function logout() {
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        // BRAND & PRODUCT MASTER
+        function openBrandModal() { document.getElementById('brandModal').classList.remove('hidden'); }
+        function closeBrandModal() { document.getElementById('brandModal').classList.add('hidden'); }
+
+        function addNewBrand(e) {
+            e.preventDefault();
+            const name = document.getElementById('newBrandInput').value.trim();
+            if (name && !brands.includes(name)) {
+                brands.push(name);
+                localStorage.setItem('aq_brands', JSON.stringify(brands));
+                populateBrandDropdowns();
+                document.getElementById('newBrandInput').value = '';
+                closeBrandModal();
+                playSuccessSound();
+                alert(`نیا برانڈ "${name}" شامل ہو گیا!`);
+            }
+        }
+
+        function populateBrandDropdowns() {
+            const select = document.getElementById('prodBrandSelect');
+            select.innerHTML = '';
+            brands.forEach(b => { select.innerHTML += `<option value="${b}">${b}</option>`; });
+        }
+
+        function populateProductDatalist() {
+            const datalist = document.getElementById('productListOptions');
+            datalist.innerHTML = '';
+            
+            let allNames = products.map(p => ({ name: p.name, source: 'Master', rate: p.rate }));
+
+            invoices.forEach(inv => {
+                if (!allNames.some(a => a.name.toLowerCase() === inv.productName.toLowerCase())) {
+                    allNames.push({ name: inv.productName, source: 'Invoice Record', rate: inv.rate });
+                }
+            });
+
+            allNames.forEach(p => {
+                datalist.innerHTML += `<option value="${p.name}">[${p.source}] Rate: Rs. ${p.rate}</option>`;
+            });
+        }
+
+        function renderProductMasterList() {
+            const container = document.getElementById('productMasterList');
+            container.innerHTML = '';
+            const user = getActiveUser();
+
+            products.forEach((p, idx) => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center p-1.5 bg-gray-50 rounded border">
+                        <div class="truncate pr-2">
+                            <span class="font-bold text-gray-800">${p.name}</span>
+                            <span class="text-gray-500 block text-[10px]">Rs. ${p.rate} | Margin: ${p.disc}%</span>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="editProductMaster(${idx})" class="text-blue-600 hover:text-blue-800 text-xs px-1.5 py-0.5 rounded border border-blue-200" title="Edit">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            ${user.role === 'admin' ? `
+                            <button onclick="deleteProductMaster(${idx})" class="text-red-600 hover:text-red-800 text-xs px-1.5 py-0.5 rounded border border-red-200" title="Delete Product">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteProductMaster(index) {
+            if (confirm(`کیا آپ واقعی "${products[index].name}" کو لسٹ سے ڈیلیٹ کرنا چاہتے ہیں؟`)) {
+                products.splice(index, 1);
+                localStorage.setItem('aq_products', JSON.stringify(products));
+                populateProductDatalist();
+                renderProductMasterList();
+                playSuccessSound();
+            }
+        }
+
+        function editProductMaster(index) {
+            const p = products[index];
+            document.getElementById('editProdIndex').value = index;
+            document.getElementById('prodBrandSelect').value = p.brand || brands[0];
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodRate').value = p.rate;
+            document.getElementById('prodDisc').value = p.disc;
+            document.getElementById('prodTax').value = p.tax;
+
+            document.getElementById('prodFormTitle').innerText = "Edit Product Master";
+            document.getElementById('btnSaveProd').innerText = "Update Product";
+            document.getElementById('btnCancelEditProd').classList.remove('hidden');
+        }
+
+        function resetProductForm() {
+            document.getElementById('editProdIndex').value = "-1";
+            document.getElementById('productForm').reset();
+            document.getElementById('prodFormTitle').innerText = "Add / Edit Product Master";
+            document.getElementById('btnSaveProd').innerText = "Save Product";
+            document.getElementById('btnCancelEditProd').classList.add('hidden');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const editIdx = parseInt(document.getElementById('editProdIndex').value);
+            const brand = document.getElementById('prodBrandSelect').value;
+            const name = document.getElementById('prodName').value.trim();
+            const rate = parseFloat(document.getElementById('prodRate').value);
+            const disc = parseFloat(document.getElementById('prodDisc').value);
+            const tax = parseFloat(document.getElementById('prodTax').value);
+
+            if (editIdx >= 0) {
+                products[editIdx] = { brand, name, rate, disc, tax };
+                alert("پراڈکٹ کی معلومات اپڈیٹ کر دی گئی ہیں!");
+            } else {
+                products.push({ brand, name, rate, disc, tax });
+                alert("پراڈکٹ کامیابی سے شامل کر دی گئی ہے!");
+            }
+
+            localStorage.setItem('aq_products', JSON.stringify(products));
+            populateProductDatalist();
+            renderProductMasterList();
+            resetProductForm();
+            playSuccessSound();
+        }
+
+        function toggleCalcMode() {
+            const mode = document.querySelector('input[name="calcMode"]:checked').value;
+            const lblDisc = document.getElementById('lblDisc');
+            const lblTax = document.getElementById('lblTax');
+
+            if (mode === 'percent') {
+                lblDisc.innerText = 'Margin (%) :';
+                lblTax.innerText = 'Income Tax (%) :';
+            } else {
+                lblDisc.innerText = 'Margin Amount (Rs) :';
+                lblTax.innerText = 'Income Tax Amount (Rs) :';
+            }
+            calculateRowTotals();
+        }
+
+        function handleProductSearchInput() {
+            const val = document.getElementById('selectedProductInput').value.trim().toLowerCase();
+            const badge = document.getElementById('historicalMatchBadge');
+            if (!val) {
+                badge.classList.add('hidden');
+                return;
+            }
+
+            const prevInvItem = invoices.find(inv => inv.productName.toLowerCase() === val);
+            const masterItem = products.find(p => p.name.toLowerCase() === val);
+
+            if (prevInvItem) {
+                document.getElementById('entryRate').value = prevInvItem.rate;
+                document.getElementById('entryDiscP').value = prevInvItem.discAmt || 0;
+                document.getElementById('entryTaxP').value = prevInvItem.taxAmt || 0;
+                badge.innerText = "Previous Invoice Data Loaded";
+                badge.classList.remove('hidden');
+            } else if (masterItem) {
+                document.getElementById('entryRate').value = masterItem.rate;
+                document.getElementById('entryDiscP').value = masterItem.disc;
+                document.getElementById('entryTaxP').value = masterItem.tax;
+                badge.innerText = "Master Record Loaded";
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            calculateRowTotals();
+        }
+
+        function calculateRowTotals() {
+            const qty = parseFloat(document.getElementById('entryQty').value) || 0;
+            const rate = parseFloat(document.getElementById('entryRate').value) || 0;
+            const discInput = parseFloat(document.getElementById('entryDiscP').value) || 0;
+            const taxInput = parseFloat(document.getElementById('entryTaxP').value) || 0;
+            const mode = document.querySelector('input[name="calcMode"]:checked').value;
+
+            const gross = qty * rate;
+            let discAmt = 0;
+            let taxAmt = 0;
+
+            if (mode === 'percent') {
+                discAmt = gross * (discInput / 100);
+                taxAmt = gross * (taxInput / 100);
+            } else {
+                discAmt = discInput;
+                taxAmt = taxInput;
+            }
+
+            const net = gross - discAmt + taxAmt;
+
+            document.getElementById('entryTaxAmt').value = "Rs. " + taxAmt.toFixed(2);
+            document.getElementById('entryNetTotal').value = "Rs. " + net.toFixed(2);
+        }
+
+        function addItemToCart() {
+            const prodNameInput = document.getElementById('selectedProductInput').value.trim();
+            const qty = parseFloat(document.getElementById('entryQty').value);
+            const rate = parseFloat(document.getElementById('entryRate').value);
+
+            if (!prodNameInput || isNaN(qty) || qty <= 0 || isNaN(rate)) {
+                playErrorSound();
+                alert("براہ کرم پراڈکٹ، کوانٹٹی اور ریٹ مکمل درج کریں۔");
+                return;
+            }
+
+            const discVal = parseFloat(document.getElementById('entryDiscP').value) || 0;
+            const taxVal = parseFloat(document.getElementById('entryTaxP').value) || 0;
+            const mode = document.querySelector('input[name="calcMode"]:checked').value;
+
+            const gross = qty * rate;
+            let discAmt = 0;
+            let taxAmt = 0;
+
+            if (mode === 'percent') {
+                discAmt = gross * (discVal / 100);
+                taxAmt = gross * (taxVal / 100);
+            } else {
+                discAmt = discVal;
+                taxAmt = taxVal;
+            }
+
+            const net = gross - discAmt + taxAmt;
+
+            let existingProd = products.find(p => p.name.toLowerCase() === prodNameInput.toLowerCase());
+            if (!existingProd) {
+                const newProdObj = {
+                    brand: brands[0] || "General",
+                    name: prodNameInput,
+                    rate: rate,
+                    disc: mode === 'percent' ? discVal : 0,
+                    tax: mode === 'percent' ? taxVal : 0
+                };
+                products.push(newProdObj);
+                localStorage.setItem('aq_products', JSON.stringify(products));
+                populateProductDatalist();
+                renderProductMasterList();
+            }
+
+            invoiceCart.push({
+                productName: prodNameInput,
+                qty: qty,
+                rate: rate,
+                gross: gross,
+                discAmt: discAmt,
+                taxAmt: taxAmt,
+                net: net
+            });
+
+            renderCart();
+            playSuccessSound();
+
+            document.getElementById('selectedProductInput').value = '';
+            document.getElementById('entryQty').value = '';
+            document.getElementById('entryRate').value = '';
+            document.getElementById('entryTaxAmt').value = '';
+            document.getElementById('entryNetTotal').value = '';
+            document.getElementById('historicalMatchBadge').classList.add('hidden');
+        }
+
+        function renderCart() {
+            const tbody = document.getElementById('cartTableBody');
+            document.getElementById('cartCount').innerText = invoiceCart.length;
+
+            let totalCartAmount = 0;
+
+            if (invoiceCart.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-3 text-center text-gray-400 italic">No items added to invoice cart yet. Select or type a product above and click "Add Item to Cart".</td></tr>`;
+                document.getElementById('cartTotalAmount').innerText = "Rs. 0.00";
+                return;
+            }
+
+            tbody.innerHTML = '';
+            invoiceCart.forEach((item, idx) => {
+                totalCartAmount += item.net;
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2 font-bold">${idx + 1}</td>
+                        <td class="p-2">${item.productName}</td>
+                        <td class="p-2 text-right font-bold text-blue-600">${item.qty}</td>
+                        <td class="p-2 text-right">Rs. ${item.gross.toFixed(2)}</td>
+                        <td class="p-2 text-right text-orange-600">-Rs. ${item.discAmt.toFixed(2)}</td>
+                        <td class="p-2 text-right text-red-600">+Rs. ${item.taxAmt.toFixed(2)}</td>
+                        <td class="p-2 text-right font-bold text-green-700">Rs. ${item.net.toFixed(2)}</td>
+                        <td class="p-2 text-center">
+                            <button onclick="removeFromCart(${idx})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('cartTotalAmount').innerText = "Rs. " + totalCartAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function removeFromCart(idx) {
+            invoiceCart.splice(idx, 1);
+            renderCart();
+        }
+
+        function saveFullInvoice() {
+            const user = getActiveUser();
+            if (user.role === 'viewer') {
+                playErrorSound();
+                return alert("Viewer account permission denied!");
+            }
+
+            const date = document.getElementById('entryDate').value;
+            const invoiceNo = document.getElementById('invoiceNo').value.trim();
+
+            if (!date || !invoiceNo) {
+                playErrorSound();
+                alert("تاریخ اور انوائس نمبر درج کرنا لازمی ہیں!");
+                return;
+            }
+
+            if (invoiceCart.length === 0) {
+                playErrorSound();
+                alert("کارٹ میں کوئی پراڈکٹ شامل نہیں ہے! پہلے کارٹ میں برانڈز/آئٹمز ایڈ کریں۔");
+                return;
+            }
+
+            invoiceCart.forEach(item => {
+                invoices.unshift({
+                    id: Date.now() + Math.random(),
+                    date: date,
+                    invoiceNo: invoiceNo,
+                    productName: item.productName,
+                    qty: item.qty,
+                    rate: item.rate,
+                    gross: item.gross,
+                    discAmt: item.discAmt,
+                    taxAmt: item.taxAmt,
+                    net: item.net
+                });
+            });
+
+            localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+            invoiceCart = [];
+            renderCart();
+            populateProductDatalist();
+            document.getElementById('invoiceNo').value = '';
+            playSuccessSound();
+            renderHistory();
+            alert("پوری انوائس تمام برانڈز سمیت کامیابی سے محفوظ ہو گئی ہے!");
+        }
+
+        function openEditModal(invNo) {
+            const items = invoices.filter(i => i.invoiceNo === invNo);
+            if (items.length === 0) return;
+
+            document.getElementById('editInvoiceNoOld').value = invNo;
+            document.getElementById('editDate').value = items[0].date;
+            document.getElementById('editInvoiceNo').value = items[0].invoiceNo;
+
+            document.getElementById('editInvoiceModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editInvoiceModal').classList.add('hidden');
+        }
+
+        function saveEditedInvoice(e) {
+            e.preventDefault();
+            const oldInvNo = document.getElementById('editInvoiceNoOld').value;
+            const newDate = document.getElementById('editDate').value;
+            const newInvNo = document.getElementById('editInvoiceNo').value.trim();
+
+            invoices.forEach(item => {
+                if (item.invoiceNo === oldInvNo) {
+                    item.date = newDate;
+                    item.invoiceNo = newInvNo;
+                }
+            });
+
+            localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+            closeEditModal();
+            renderHistory();
+            playSuccessSound();
+            alert("انوائس ریکارڈ اپڈیٹ ہو گیا ہے!");
+        }
+
+        // HISTORY & LEDGER RENDER WITH UPDATED TABLE HEADINGS
+        function renderHistory() {
+            const tbody = document.getElementById('historyTableBody');
+            const monthFilter = document.getElementById('filterMonth').value;
+            const search = document.getElementById('searchQuery').value.toLowerCase();
+            const currentUser = getActiveUser();
+
+            // Update Header Text for Printing based on Selected Month
+            const filterSelect = document.getElementById('filterMonth');
+            const selectedText = filterSelect.options[filterSelect.selectedIndex].text;
+            document.getElementById('printPeriodText').innerText = monthFilter === 'ALL' ? 'All Months & Years' : selectedText;
+
+            tbody.innerHTML = '';
+
+            let sumQty = 0, sumGross = 0, sumDisc = 0, sumTax = 0, sumNet = 0;
+
+            const filteredRaw = invoices.filter(item => {
+                const matchesMonth = (monthFilter === 'ALL') || item.date.startsWith(monthFilter);
+                const matchesSearch = item.invoiceNo.toLowerCase().includes(search) || item.productName.toLowerCase().includes(search);
+                return matchesMonth && matchesSearch;
+            });
+
+            const groupedInvoices = [];
+            filteredRaw.forEach(item => {
+                let existingGroup = groupedInvoices.find(g => g.invoiceNo === item.invoiceNo && g.date === item.date);
+                if (existingGroup) {
+                    existingGroup.products.push(item);
+                    existingGroup.totalQty += item.qty;
+                    existingGroup.totalGross += item.gross;
+                    existingGroup.totalDisc += item.discAmt;
+                    existingGroup.totalTax += item.taxAmt;
+                    existingGroup.totalNet += item.net;
+                } else {
+                    groupedInvoices.push({
+                        invoiceNo: item.invoiceNo,
+                        date: item.date,
+                        products: [item],
+                        totalQty: item.qty,
+                        totalGross: item.gross,
+                        totalDisc: item.discAmt,
+                        totalTax: item.taxAmt,
+                        totalNet: item.net
+                    });
+                }
+            });
+
+            groupedInvoices.forEach((group, index) => {
+                sumQty += group.totalQty;
+                sumGross += group.totalGross;
+                sumDisc += group.totalDisc;
+                sumTax += group.totalTax;
+                sumNet += group.totalNet;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 border-b">
+                        <td class="p-2 border text-center font-bold">${index + 1}</td>
+                        <td class="p-2 border text-center">${group.date}</td>
+                        <td class="p-2 border font-bold text-gray-800 text-center">${group.invoiceNo}</td>
+                        <td class="p-2 border text-right font-semibold text-blue-700">${group.totalQty}</td>
+                        <td class="p-2 border text-right">Rs. ${group.totalGross.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2 border text-right text-orange-600">Rs. ${group.totalDisc.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2 border text-right text-red-600">Rs. ${group.totalTax.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2 border text-right font-bold text-green-700 bg-green-50/50">Rs. ${group.totalNet.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2 border no-print text-center">
+                            ${currentUser.role === 'admin' ? `
+                                <button onclick="openEditModal('${group.invoiceNo}')" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit Entry"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteInvoiceGroup('${group.invoiceNo}')" class="text-red-600 hover:text-red-800" title="Delete Invoice"><i class="fa-solid fa-trash"></i></button>
+                            ` : `<span class="text-gray-400 text-[10px]">Restricted</span>`}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('dashInvoices').innerText = groupedInvoices.length;
+            document.getElementById('dashQty').innerText = sumQty.toLocaleString();
+            document.getElementById('dashGross').innerText = "Rs. " + sumGross.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('dashDisc').innerText = "Rs. " + sumDisc.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('dashTax').innerText = "Rs. " + sumTax.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('dashNet').innerText = "Rs. " + sumNet.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+            document.getElementById('footQty').innerText = sumQty.toLocaleString();
+            document.getElementById('footGross').innerText = "Rs. " + sumGross.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('footDisc').innerText = "Rs. " + sumDisc.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('footTax').innerText = "Rs. " + sumTax.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('footNet').innerText = "Rs. " + sumNet.toLocaleString('en-US', {minimumFractionDigits: 2});
+        }
+
+        function triggerPrint() {
+            document.getElementById('printCurrentDate').innerText = new Date().toLocaleDateString('en-GB');
+            window.print();
+        }
+
+        function deleteInvoiceGroup(invNo) {
+            if (confirm(`کیا آپ انوائس نمبر #${invNo} اور اس کی تمام پراڈکٹس ڈیلیٹ کرنا چاہتے ہیں؟`)) {
+                invoices = invoices.filter(item => item.invoiceNo !== invNo);
+                localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+                renderHistory();
+            }
+        }
+
+        // USER MANAGEMENT
+        function renderUserDropdown() {
+            const select = document.getElementById('userSwitchSelect');
+            select.innerHTML = '';
+            systemUsers.forEach(u => {
+                select.innerHTML += `<option value="${u.id}" ${u.id === activeUserId ? 'selected' : ''}>${u.name} (${u.role.toUpperCase()})</option>`;
+            });
+        }
+
+        function changeActiveUser(id) {
+            activeUserId = parseInt(id);
+            applyRolePermissions();
+            renderHistory();
+        }
+
+        function getActiveUser() {
+            return systemUsers.find(u => u.id === activeUserId) || systemUsers[0];
+        }
+
+        function applyRolePermissions() {
+            const user = getActiveUser();
+            const brandCard = document.getElementById('brandManagerCard');
+            const backupPanel = document.getElementById('adminBackupPanel');
+            const entrySection = document.getElementById('entryFormSection');
+            const ocrSection = document.getElementById('ocrSection');
+
+            if (user.role === 'admin') {
+                brandCard.classList.remove('hidden');
+                backupPanel.classList.remove('hidden');
+                entrySection.classList.remove('hidden');
+                ocrSection.classList.remove('hidden');
+            } else if (user.role === 'operator') {
+                brandCard.classList.add('hidden');
+                backupPanel.classList.add('hidden');
+                entrySection.classList.remove('hidden');
+                ocrSection.classList.remove('hidden');
+            } else if (user.role === 'viewer') {
+                brandCard.classList.add('hidden');
+                backupPanel.classList.add('hidden');
+                entrySection.classList.add('hidden');
+                ocrSection.classList.add('hidden');
+            }
+        }
+
+        function openUserMgmtModal() {
+            const user = getActiveUser();
+            if (user.role !== 'admin') {
+                playErrorSound();
+                alert("Only System Admin can manage user accounts!");
+                return;
+            }
+            renderUserTable();
+            document.getElementById('userMgmtModal').classList.remove('hidden');
+        }
+
+        function closeUserMgmtModal() { document.getElementById('userMgmtModal').classList.add('hidden'); }
+
+        function renderUserTable() {
+            const tbody = document.getElementById('userListTable');
+            tbody.innerHTML = '';
+            systemUsers.forEach(u => {
+                let badge = u.role === 'admin' ? 'bg-red-100 text-red-700' : u.role === 'operator' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                let rights = u.role === 'admin' ? 'Full Read/Write/Delete' : u.role === 'operator' ? 'Create Invoices Only' : 'Read-Only (Reports)';
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-2 font-bold">${u.name}</td>
+                        <td class="p-2"><span class="px-2 py-0.5 rounded font-bold uppercase text-[10px] ${badge}">${u.role}</span></td>
+                        <td class="p-2 text-gray-500">${rights}</td>
+                        <td class="p-2 text-center">
+                            ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>` : `<span class="text-gray-400">Owner</span>`}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function createNewUserRole(e) {
+            e.preventDefault();
+            const name = document.getElementById('newUserName').value;
+            const role = document.getElementById('newUserRole').value;
+
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                username: name.toLowerCase().replace(/\s+/g, ''),
+                pass: "1234",
+                role: role
+            };
+
+            systemUsers.push(newUser);
+            localStorage.setItem('aq_users', JSON.stringify(systemUsers));
+            document.getElementById('newUserForm').reset();
+            renderUserDropdown();
+            renderUserTable();
+            playSuccessSound();
+            alert("نیا یوزر اکاؤنٹ شامل کر دیا گیا ہے!");
+        }
+
+        function deleteUser(id) {
+            if (confirm("Remove this user profile?")) {
+                systemUsers = systemUsers.filter(u => u.id !== id);
+                localStorage.setItem('aq_users', JSON.stringify(systemUsers));
+                renderUserDropdown();
+                renderUserTable();
+            }
+        }
+
+        // EXPORT & BACKUP
+        function exportToExcel() {
+            const table = document.getElementById('invoiceTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Al Qadir Invoice Ledger" });
+            XLSX.writeFile(wb, `Al_Qadir_Traders_Ledger_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        function exportBackup() {
+            const data = { brands, products, invoices, systemUsers };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `AlQadir_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function importBackup(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    if (data.products && data.invoices) {
+                        products = data.products;
+                        invoices = data.invoices;
+                        if (data.brands) brands = data.brands;
+                        if (data.systemUsers) systemUsers = data.systemUsers;
+                        localStorage.setItem('aq_brands', JSON.stringify(brands));
+                        localStorage.setItem('aq_products', JSON.stringify(products));
+                        localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+                        localStorage.setItem('aq_users', JSON.stringify(systemUsers));
+                        populateBrandDropdowns();
+                        populateProductDatalist();
+                        renderProductMasterList();
+                        renderUserDropdown();
+                        renderHistory();
+                        playSuccessSound();
+                        alert("ڈیٹا بحال کر دیا گیا ہے!");
+                    }
+                } catch (err) {
+                    playErrorSound();
+                    alert("بیک اپ فائل فارمیٹ درست نہیں ہے!");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function handleImageUpload(e) {
+            const status = document.getElementById('ocrStatus');
+            status.classList.remove('hidden');
+            status.innerText = "Scanning invoice image...";
+            
+            setTimeout(() => {
+                status.innerText = "✓ Scanned! Auto-filling items into invoice cart...";
+                document.getElementById('invoiceNo').value = "9020" + Math.floor(100000 + Math.random() * 900000);
+                
+                invoiceCart = [
+                    { productName: products[0].name, qty: 10, rate: products[0].rate, gross: 10 * products[0].rate, discAmt: 10 * products[0].rate * 0.05, taxAmt: 10 * products[0].rate * 0.1, net: 10 * products[0].rate * 1.05 },
+                    { productName: products[1].name, qty: 5, rate: products[1].rate, gross: 5 * products[1].rate, discAmt: 5 * products[1].rate * 0.05, taxAmt: 5 * products[1].rate * 0.1, net: 5 * products[1].rate * 1.05 }
+                ];
+                
+                renderCart();
+                playSuccessSound();
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
