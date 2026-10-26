@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AL QADIR TRADERS - Enterprise Management System</title>
+    <!-- App install (PWA) -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#12020a">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Al Qadir">
+    <meta name="application-name" content="Al Qadir">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -304,7 +315,75 @@
             #editInvoiceModal .text-blue-700 { color: #6cc4ff !important; }
             #editInvoiceModal .text-orange-600 { color: #ffb54d !important; }
             #editInvoiceModal .text-red-600, #userMgmtModal .text-red-600 { color: #ff6b78 !important; }
+            #editInvoiceModal .edit-items-table thead tr { background: linear-gradient(90deg, #2a0510, #46081a, #2a0510); }
+            #editInvoiceModal .edit-items-table th { color: #ffd9dc; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px; border-color: rgba(255,43,61,0.35) !important; }
+            #editInvoiceModal .edit-items-table td { border-color: rgba(0,229,255,0.15) !important; }
+            #editInvoiceModal .edit-items-table tfoot tr { background: rgba(0,229,255,0.08); }
+            #editInvoiceModal .edit-items-table tfoot td:nth-child(6), #editInvoiceModal .edit-net-val { color: #ffe27a; }
+            #editInvoiceModal .text-blue-600 { color: #6cc4ff !important; }
+            #pendingNet { color: #ffe27a !important; }
         }
+
+        /* ===== Install app ===== */
+        .install-app-btn { background: linear-gradient(90deg, #b30812, #ff2433); color: #fff; font-weight: 700; letter-spacing: .5px; border: 1px solid rgba(255,214,80,.6); box-shadow: 0 0 14px rgba(255,36,51,.55); }
+        .install-app-btn:hover { box-shadow: 0 0 24px rgba(255,214,80,.7); }
+        .install-app-btn.show { display: flex !important; }
+
+        /* ===== Invoice scan ===== */
+        .scan-cta { background: linear-gradient(90deg, #6a00ff, #00b7ff); color: #fff; letter-spacing: .5px; box-shadow: 0 0 16px rgba(0,183,255,.45); transition: all .2s; }
+        .scan-cta:hover { box-shadow: 0 0 26px rgba(0,183,255,.8); transform: translateY(-1px); }
+        .scan-shell { background: linear-gradient(160deg, #120a22, #07040f); color: #e6f6ff; border: 1px solid rgba(0,229,255,0.4); box-shadow: 0 0 40px rgba(0,229,255,0.25); font-family: 'Rajdhani', 'Poppins', sans-serif; }
+        .scan-title { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; color: #eef6ff; }
+        .scan-x { color: #8fb3c9; } .scan-x:hover { color: #fff; }
+        .scan-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(0,229,255,0.2); }
+        .scan-in { background: rgba(255,255,255,0.06); color: #eaf8ff; border: 1px solid rgba(0,229,255,0.3); border-radius: 6px; padding: 5px 6px; font-size: 12px; }
+        .scan-in:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 2px rgba(0,229,255,.2); }
+        .scan-in[type=date]::-webkit-calendar-picker-indicator { filter: invert(1); }
+        .scan-table { font-size: 12px; }
+        .scan-table thead tr { background: linear-gradient(90deg, #2a0510, #46081a, #2a0510); }
+        .scan-table th { color: #ffd9dc; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px; }
+        .scan-table tfoot tr { background: rgba(0,229,255,0.08); border-top: 2px solid #00e5ff; }
+        .scan-row-ok { box-shadow: inset 3px 0 0 #2bff88; }
+        .scan-row-fixed { box-shadow: inset 3px 0 0 #3da9ff; }
+        .scan-row-check { box-shadow: inset 3px 0 0 #ffa22b; background: rgba(255,162,43,0.08); }
+        .scan-badge { display: inline-flex; width: 22px; height: 22px; border-radius: 50%; align-items: center; justify-content: center; font-size: 11px; }
+        .scan-badge.ok { background: rgba(43,255,136,.15); color: #5dffa6; }
+        .scan-badge.fixed { background: rgba(61,169,255,.18); color: #8fd3ff; }
+        .scan-badge.check { background: rgba(255,162,43,.2); color: #ffc067; }
+        .scan-net { color: #ffe27a; }
+        .scan-del { color: #ff6b78; } .scan-del:hover { color: #ff2b3d; }
+        .scan-link { color: #6cc4ff; }
+        .scan-banner { border-radius: 10px; padding: 9px 12px; font-weight: 700; font-size: 13px; }
+        .scan-banner.ok { background: rgba(43,255,136,.12); border: 1px solid #2bff88; color: #5dffa6; }
+        .scan-banner.bad { background: rgba(255,43,61,.14); border: 1px solid #ff2b3d; color: #ff9aa2; }
+        .scan-banner.warn { background: rgba(255,162,43,.12); border: 1px solid #ffa22b; color: #ffc067; }
+        .scan-photo-wrap { max-height: 70vh; overflow: auto; border-radius: 10px; border: 1px solid rgba(0,229,255,0.25); background: #fff; }
+        .scan-photo-wrap img { width: 100%; display: block; }
+        .scan-photo-wrap.zoomed img { width: 230%; max-width: none; }
+        @media (max-width: 1023px) {
+            .scan-photo-wrap { max-height: 30vh; }
+            .scan-photo-wrap.zoomed { max-height: 70vh; }
+            #scanHeaderImg { max-height: none !important; }
+        }
+        .scan-btn-green { background: #16a34a; color: #fff; font-weight: 700; padding: 9px 18px; border-radius: 9px; font-size: 13px; }
+        .scan-btn-green:hover { box-shadow: 0 0 18px rgba(43,255,136,.7); }
+        .scan-btn-grey { background: rgba(255,255,255,0.1); color: #eef6ff; font-weight: 700; padding: 9px 18px; border-radius: 9px; font-size: 13px; border: 1px solid rgba(0,229,255,.35); }
+        .scan-next-btn { background: rgba(0,229,255,0.1); color: #8ff3ff; border: 1px dashed #00e5ff; border-radius: 9px; padding: 8px; font-weight: 700; font-size: 12px; }
+        .scan-next-btn:hover { background: rgba(0,229,255,0.2); }
+        .scan-thumb { position: relative; flex: 0 0 auto; width: 58px; border: 2px solid rgba(0,229,255,0.25); border-radius: 6px; overflow: hidden; background: #fff; }
+        .scan-thumb.active { border-color: #ff2b3d; }
+        .scan-thumb img { width: 100%; height: 70px; object-fit: cover; object-position: top; display: block; }
+        .scan-thumb span { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.7); color: #fff; font-size: 9px; text-align: center; }
+        .photo-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(0,229,255,0.2); border-radius: 10px; padding: 6px; }
+        .photo-card img { width: 100%; height: 260px; object-fit: contain; background: #fff; border-radius: 6px; }
+        .photo-chip { display: inline-block; margin-top: 2px; font-size: 10px; font-weight: 700; color: #5ff7ff; background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.35); border-radius: 999px; padding: 0 7px; }
+        .ss-cell { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,229,255,0.2); border-radius: 8px; padding: 6px 10px; display: flex; flex-direction: column; }
+        .ss-cell span { font-size: 10px; color: #8fb3c9; }
+        .ss-cell b { color: #eef6ff; font-size: 15px; }
+        .scan-btn-green:disabled { opacity: .6; cursor: wait; }
+        @keyframes rowFlash { 0%,100% { background: transparent; } 20%,60% { background: rgba(43,255,136,0.35); } }
+        #appContainer tbody tr.row-flash { animation: rowFlash 2.6s ease; box-shadow: inset 4px 0 0 #2bff88; }
+        .scan-btn-blue { background: #2563eb; color: #fff; font-weight: 700; padding: 6px 12px; border-radius: 8px; }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
@@ -505,6 +584,10 @@
                 </button>
             </form>
 
+            <button type="button" onclick="installApp()" class="install-app-btn hidden w-full mt-4 text-xs py-2.5 rounded-lg items-center justify-center gap-2">
+                <img src="icon-192.png" alt="" class="w-6 h-6 rounded"> <span>Install App — موبائل / کمپیوٹر پر انسٹال کریں</span>
+            </button>
+
             <div class="mt-6 pt-4 text-center" style="border-top:1px solid rgba(255,80,95,0.25);">
                 <p class="text-[11px] font-medium" style="color:#b9a3a6;">
                     Designed & Developed by <br>
@@ -567,6 +650,9 @@
                 </div>
 
                 <div class="flex items-center space-x-3 mt-2 sm:mt-0">
+                    <button type="button" onclick="installApp()" class="install-app-btn hidden text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5" title="Install App">
+                        <img src="icon-192.png" alt="" class="w-5 h-5 rounded"> <span>Install App</span>
+                    </button>
                     <button id="btnUserMgmt" onclick="openUserMgmtModal()" class="bg-black bg-opacity-30 hover:bg-opacity-50 text-white text-xs px-3 py-1.5 rounded-lg flex items-center transition border border-white/20">
                         <i class="fa-solid fa-users-gear mr-1.5"></i>
                         <span>User Management</span>
@@ -635,46 +721,101 @@
                     <div id="manualEntrySection" class="glass-card rounded-xl shadow-lg p-4 border border-red-200">
                         <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2 border-b pb-2">
                             <i class="fa-solid fa-circle-plus text-red-600"></i>
-                            New Manual Invoice Entry
+                            New Invoice Entry (Multi-Product)
                         </h3>
-                        <form onsubmit="handleManualNewEntry(event)" class="space-y-3 text-xs">
-                            <div>
-                                <label class="block font-semibold mb-1">Date / تاریخ:</label>
-                                <input type="date" id="newEntryDate" required class="w-full border rounded-lg p-2">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Invoice Number / انوائس نمبر:</label>
-                                <input type="text" id="newEntryInvNo" required placeholder="e.g. INV-1002" class="w-full border rounded-lg p-2 font-bold">
-                            </div>
+                        <div class="space-y-3 text-xs">
+                            <!-- Scan invoice photo -->
+                            <button type="button" onclick="startInvoiceScan()" class="scan-cta w-full font-bold py-2.5 rounded-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-camera"></i> Invoice Photo Scan کریں
+                            </button>
+                            <input type="file" id="scanFileInput" accept="image/*" class="hidden" onchange="handleScanFile(event)">
+                            <div class="text-center text-[10px]" style="color:#8fb3c9;">— یا نیچے خود درج کریں —</div>
+
+                            <!-- Step 1: Invoice header (one time) -->
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block font-semibold mb-1">Total Qty:</label>
-                                    <input type="number" id="newEntryQty" required oninput="calcNewEntryNet()" placeholder="0" class="w-full border rounded-lg p-2 text-blue-600 font-bold">
+                                    <label class="block font-semibold mb-1">Date / تاریخ:</label>
+                                    <input type="date" id="newEntryDate" class="w-full border rounded-lg p-2">
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-1">Total Value:</label>
-                                    <input type="number" step="0.01" id="newEntryGross" required oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 font-semibold">
+                                    <label class="block font-semibold mb-1">Invoice No / انوائس:</label>
+                                    <input type="text" id="newEntryInvNo" oninput="checkDuplicateInvoiceLive()" placeholder="e.g. INV-1002" class="w-full border rounded-lg p-2 font-bold">
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block font-semibold mb-1">Margin Amt:</label>
-                                    <input type="number" step="0.01" id="newEntryMargin" required oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 text-orange-600">
+                            <div id="dupInvoiceWarning" class="hidden rounded-lg p-2 font-semibold" style="background:rgba(255,162,43,0.15); border:1px solid #ffa22b; color:#ffc067;"></div>
+
+                            <!-- Step 2: Product line (repeat) -->
+                            <form id="productLineForm" onsubmit="addProductLine(event)" class="space-y-2 bg-gray-100 p-2 rounded-lg border">
+                                <div class="font-bold text-gray-700"><i class="fa-solid fa-box mr-1"></i> Product شامل کریں</div>
+                                <input type="text" id="lineProduct" list="productNameList" required placeholder="Product Name (e.g. Coke 1.5L)" class="w-full border rounded-lg p-2 font-semibold" autocomplete="off">
+                                <datalist id="productNameList"></datalist>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block font-semibold mb-1">Qty:</label>
+                                        <input type="number" step="any" id="lineQty" oninput="calcNewEntryNet()" placeholder="0" class="w-full border rounded-lg p-2 text-blue-600 font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold mb-1">Value:</label>
+                                        <input type="number" step="0.01" id="lineGross" oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 font-semibold">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block font-semibold mb-1">Margin:</label>
+                                        <input type="number" step="0.01" id="lineMargin" oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 text-orange-600">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold mb-1">Income Tax:</label>
+                                        <input type="number" step="0.01" id="lineTax" oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 text-red-600">
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block font-semibold mb-1">Income Tax:</label>
-                                    <input type="number" step="0.01" id="newEntryTax" required oninput="calcNewEntryNet()" placeholder="0.00" class="w-full border rounded-lg p-2 text-red-600">
+                                    <label class="block font-bold mb-1">Product Net:</label>
+                                    <input type="number" step="0.01" id="newEntryNet" readonly placeholder="0.00" class="w-full border bg-yellow-100 rounded-lg p-2 font-extrabold text-green-800">
                                 </div>
-                            </div>
-                            <div>
-                                <label class="block font-bold mb-1">Net Remaining Total:</label>
-                                <input type="number" step="0.01" id="newEntryNet" readonly placeholder="0.00" class="w-full border bg-yellow-100 rounded-lg p-2 font-extrabold text-green-800">
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Add Product
+                                </button>
+                            </form>
+
+                            <!-- Step 3: Products added in this invoice -->
+                            <div class="border rounded-lg p-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="font-bold text-gray-700">اس انوائس کے پروڈکٹس</span>
+                                    <span id="pendingCount" class="font-bold text-red-600">0 items</span>
+                                </div>
+                                <div class="overflow-x-auto max-h-56 overflow-y-auto">
+                                    <table class="w-full border-collapse text-[11px]">
+                                        <thead>
+                                            <tr class="bg-gray-900 text-white">
+                                                <th class="p-1 border text-left">Product</th>
+                                                <th class="p-1 border text-right">Qty</th>
+                                                <th class="p-1 border text-right">Net</th>
+                                                <th class="p-1 border text-center" style="width:22px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pendingItemsBody"></tbody>
+                                        <tfoot>
+                                            <tr class="font-bold">
+                                                <td class="p-1 border">TOTAL</td>
+                                                <td id="pendingQty" class="p-1 border text-right">0</td>
+                                                <td id="pendingNet" class="p-1 border text-right text-green-800">0.00</td>
+                                                <td class="p-1 border"></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
 
-                            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg shadow transition flex items-center justify-center gap-2 mt-2">
-                                <i class="fa-solid fa-save"></i> Save New Invoice
-                            </button>
-                        </form>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button type="button" onclick="clearPendingInvoice()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 rounded-lg">
+                                    <i class="fa-solid fa-xmark"></i> Clear
+                                </button>
+                                <button type="button" id="btnSaveAll" onclick="saveAllInvoice()" class="col-span-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-save"></i> Save All Invoice
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Multi-Month Excel Import -->
@@ -782,6 +923,11 @@
 
                                 <input type="text" id="searchQuery" onkeyup="renderHistory()" placeholder="Search Invoice #..." class="border text-xs rounded-lg p-2 w-36">
 
+                                <select id="ledgerSortOrder" onchange="saveSortPref(); renderHistory();" class="border text-xs rounded-lg p-2 font-bold bg-white text-gray-700" title="Date order">
+                                    <option value="asc">Date: پرانی ← نئی</option>
+                                    <option value="desc">Date: نئی ← پرانی</option>
+                                </select>
+
                                 <button id="btnDeleteSelected" onclick="deleteSelectedInvoices()" class="bg-red-600 hover:bg-red-800 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow transition">
                                     <i class="fa-solid fa-trash-can"></i> Delete Selected
                                 </button>
@@ -794,6 +940,10 @@
                                     <option value="portrait" selected>Portrait Mode</option>
                                     <option value="landscape">Landscape Mode</option>
                                 </select>
+
+                                <button onclick="printFilteredPhotos()" class="bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
+                                    <i class="fa-solid fa-images"></i> Print Photos
+                                </button>
 
                                 <button onclick="triggerPrintLedger()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
                                     <i class="fa-solid fa-print"></i> Print Ledger
@@ -816,7 +966,7 @@
                                         <th class="p-2 border border-gray-700 text-right" style="width: 100px;">MARGIN</th>
                                         <th class="p-2 border border-gray-700 text-right" style="width: 100px;">INCOME TAX</th>
                                         <th class="p-2 border border-gray-700 text-right" style="width: 120px;">TOTAL AMOUNT</th>
-                                        <th class="p-2 border border-gray-700 no-print text-center action-col" style="width: 60px;">ACTION</th>
+                                        <th class="p-2 border border-gray-700 no-print text-center action-col" style="width: 84px;">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historyTableBody">
@@ -856,7 +1006,7 @@
 
             <!-- Add User Form -->
             <form onsubmit="handleCreateUser(event)" class="bg-gray-50 p-3 rounded-xl border space-y-3 text-xs">
-                <h4 class="font-bold text-gray-700">Add New User / نیا صارف شامل کریں</h4>
+                <h4 id="userFormTitle" class="font-bold text-gray-700">Add New User / نیا صارف شامل کریں</h4>
                 <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="newFullName" required placeholder="Full Name" class="border rounded p-2">
                     <input type="text" id="newUserName" required placeholder="Username" class="border rounded p-2">
@@ -869,9 +1019,12 @@
                         <option value="auditor">Auditor (View Only)</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg shadow">
-                    <i class="fa-solid fa-user-plus mr-1"></i> Add User
-                </button>
+                <div class="flex gap-2">
+                    <button type="button" id="btnCancelUserEdit" onclick="cancelUserEdit()" class="hidden bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
+                    <button type="submit" id="btnUserSubmit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg shadow">
+                        <i class="fa-solid fa-user-plus mr-1"></i> Add User
+                    </button>
+                </div>
             </form>
 
             <!-- User List -->
@@ -895,10 +1048,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Edit Invoice Modal -->
+    <!-- Edit Invoice Modal (Multi-Product) -->
     <div id="editInvoiceModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden no-print backdrop-blur-sm p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl p-6 relative space-y-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative space-y-4 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-md font-bold text-gray-800">Edit Invoice Entry</h3>
                 <button onclick="closeEditModal()" class="text-gray-400 hover:text-black"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -916,27 +1068,35 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 p-3 rounded-lg border">
-                    <div>
-                        <label class="block font-semibold mb-1">Total Qty:</label>
-                        <input type="number" id="editQty" required oninput="calculateEditTotals()" class="w-full border rounded p-2 text-blue-700 font-bold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Total Value:</label>
-                        <input type="number" step="0.01" id="editGross" required oninput="calculateEditTotals()" class="w-full border rounded p-2 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Margin Amt:</label>
-                        <input type="number" step="0.01" id="editDisc" required oninput="calculateEditTotals()" class="w-full border rounded p-2 text-orange-600 font-semibold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Income Tax:</label>
-                        <input type="number" step="0.01" id="editTax" required oninput="calculateEditTotals()" class="w-full border rounded p-2 text-red-600 font-semibold">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block font-bold mb-1">Net Total Amount:</label>
-                        <input type="number" step="0.01" id="editNet" readonly class="w-full border bg-yellow-100 rounded p-2 font-extrabold text-green-800">
-                    </div>
+                <div class="bg-gray-50 p-3 rounded-lg border overflow-x-auto">
+                    <table class="edit-items-table w-full border-collapse text-xs" style="min-width:640px;">
+                        <thead>
+                            <tr>
+                                <th class="p-2 border text-left">Product</th>
+                                <th class="p-2 border text-right" style="width:80px;">Qty</th>
+                                <th class="p-2 border text-right" style="width:110px;">Value</th>
+                                <th class="p-2 border text-right" style="width:100px;">Margin</th>
+                                <th class="p-2 border text-right" style="width:100px;">Tax</th>
+                                <th class="p-2 border text-right" style="width:110px;">Net</th>
+                                <th class="p-2 border" style="width:34px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="editItemsBody"></tbody>
+                        <tfoot>
+                            <tr class="font-bold">
+                                <td class="p-2 border">TOTAL</td>
+                                <td id="editTotQty" class="p-2 border text-right">0</td>
+                                <td id="editTotGross" class="p-2 border text-right">0.00</td>
+                                <td id="editTotDisc" class="p-2 border text-right">0.00</td>
+                                <td id="editTotTax" class="p-2 border text-right">0.00</td>
+                                <td id="editTotNet" class="p-2 border text-right">0.00</td>
+                                <td class="p-2 border"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <button type="button" onclick="addEditRow()" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg">
+                        <i class="fa-solid fa-plus"></i> Add Product Row
+                    </button>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-3">
@@ -944,6 +1104,157 @@
                     <button type="submit" class="bg-brand text-white font-bold px-5 py-2 rounded-lg">Update Record</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Scan success card -->
+    <div id="scanSuccess" class="fixed inset-0 z-50 hidden items-center justify-center no-print p-4" style="background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);">
+        <div class="scan-shell w-full max-w-md rounded-2xl p-6 text-center" style="animation: cardIn .5s cubic-bezier(.2,.9,.3,1.2) both;">
+            <div class="mx-auto mb-3 flex items-center justify-center rounded-full" style="width:72px;height:72px;background:rgba(43,255,136,.12);border:2px solid #2bff88;box-shadow:0 0 25px rgba(43,255,136,.5);">
+                <i class="fa-solid fa-check text-3xl" style="color:#5dffa6;"></i>
+            </div>
+            <div class="scan-title text-lg">Invoice Upload ہو گئی ✓</div>
+            <div class="text-xs mb-3" style="color:#8fb3c9;">یہ انوائس آپ نے ابھی سسٹم میں محفوظ کی ہے</div>
+            <div id="scanSuccessBody"></div>
+            <div class="grid grid-cols-1 gap-2 mt-5">
+                <button type="button" onclick="scanSuccessNext()" class="scan-cta font-bold py-3 rounded-lg"><i class="fa-solid fa-camera mr-1"></i> اگلی انوائس اسکین کریں</button>
+                <button type="button" onclick="scanSuccessView()" class="scan-btn-grey"><i class="fa-solid fa-list mr-1"></i> لیجر میں دیکھیں</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Photos Modal -->
+    <div id="photosModal" class="fixed inset-0 z-50 hidden no-print p-2 sm:p-4 overflow-y-auto" style="background:rgba(0,0,0,0.8); backdrop-filter:blur(4px);">
+        <div class="scan-shell w-full max-w-5xl mx-auto rounded-2xl p-4 sm:p-5 space-y-4">
+            <div class="flex justify-between items-center pb-3" style="border-bottom:1px solid rgba(0,229,255,0.25);">
+                <h3 class="scan-title text-base font-bold"><i class="fa-solid fa-images mr-2" style="color:#00e5ff;"></i><span id="photoModalTitle">Photos</span> <span id="photoCountLbl" class="text-xs" style="color:#8fb3c9;"></span></h3>
+                <button onclick="closePhotosModal()" class="scan-x"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="photoGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+            <div class="flex flex-wrap justify-end gap-2">
+                <input type="file" id="photoAddInput" accept="image/*" multiple class="hidden" onchange="addPhotosManually(event)">
+                <button type="button" id="photoAddBtn" onclick="document.getElementById('photoAddInput').click()" class="scan-btn-grey"><i class="fa-solid fa-plus"></i> Add Photo</button>
+                <button type="button" onclick="printCurrentInvoicePhotos()" class="scan-btn-green"><i class="fa-solid fa-print mr-1"></i> Print Photos</button>
+                <button type="button" onclick="closePhotosModal()" class="scan-btn-grey">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Photo Scan Modal -->
+    <div id="scanModal" class="fixed inset-0 z-50 hidden no-print p-2 sm:p-4 overflow-y-auto" style="background:rgba(0,0,0,0.8); backdrop-filter:blur(4px);">
+        <div class="scan-shell w-full max-w-7xl mx-auto rounded-2xl p-4 sm:p-5 space-y-4">
+            <div class="flex justify-between items-center pb-3" style="border-bottom:1px solid rgba(0,229,255,0.25);">
+                <h3 class="scan-title text-base font-bold"><i class="fa-solid fa-camera mr-2" style="color:#ff2b3d;"></i>Invoice Photo Scan — Preview</h3>
+                <button onclick="closeScanModal()" class="scan-x"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Progress -->
+            <div id="scanProgress" class="py-10 text-center">
+                <div class="mx-auto mb-4 relative" style="width:90px;height:90px;">
+                    <div class="wl-ring" style="width:90px;height:90px;"></div>
+                    <div class="absolute inset-0 flex items-center justify-center"><span id="scanPct" class="wl-text font-black text-white">0%</span></div>
+                </div>
+                <p id="scanStatusText" class="mb-3" style="color:#ffc2c7;">...</p>
+                <div class="wl-bar-track max-w-md mx-auto"><div id="scanBar" class="wl-bar-fill"></div></div>
+                <p class="mt-3 text-[11px]" style="color:#8fb3c9;">پہلی بار OCR engine ڈاؤن لوڈ ہوتا ہے (انٹرنیٹ چاہیے)، اس کے بعد تیز چلے گا۔</p>
+            </div>
+
+            <div id="scanError" class="hidden rounded-lg p-3 text-sm" style="background:rgba(255,43,61,0.15); border:1px solid #ff2b3d; color:#ff9aa2;"></div>
+
+            <!-- Result -->
+            <div id="scanResult" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Photo -->
+                    <div class="lg:col-span-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold" style="color:#8fb3c9;">اصل تصویر</span>
+                            <button type="button" onclick="toggleScanZoom()" class="text-xs scan-link"><i class="fa-solid fa-magnifying-glass-plus"></i> Zoom</button>
+                        </div>
+                        <div id="scanPageThumbs" class="flex gap-2 mb-2 overflow-x-auto"></div>
+                        <div id="scanPhotoWrap" class="scan-photo-wrap"><img id="scanPhoto" alt="Invoice photo"></div>
+                        <button type="button" onclick="startNextPageScan()" class="scan-next-btn w-full mt-2"><i class="fa-solid fa-file-circle-plus mr-1"></i> + اسی انوائس کا اگلا صفحہ اسکین کریں</button>
+                        <p class="text-[10px] mt-1" style="color:#8fb3c9;">ایک صفحے پر پوری انوائس نہ ہو تو اگلے صفحے کی تصویر یہاں سے ڈالیں — سب ایک ہی انوائس بنے گی۔</p>
+                    </div>
+
+                    <!-- Data -->
+                    <div class="lg:col-span-9 space-y-3 text-xs">
+                        <div class="scan-box p-3 rounded-xl">
+                            <div class="text-[11px] mb-1" style="color:#8fb3c9;">تصویر میں انوائس نمبر / تاریخ (ملا کر دیکھیں):</div>
+                            <img id="scanHeaderImg" alt="" class="w-full max-h-28 object-contain rounded bg-white mb-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold mb-1">Invoice No / انوائس:</label>
+                                    <input type="text" id="scanInvNo" oninput="checkScanDuplicate()" class="scan-in w-full font-bold" style="font-size:14px; border-color:#ffa22b;">
+                                    <div class="mt-1 text-[10px]" style="color:#8fb3c9;"><i class="fa-solid fa-eye"></i> اوپر تصویر سے ایک بار نمبر ضرور ملا لیں</div>
+                                    <div id="scanDupNote" class="mt-1 text-[11px]" style="color:#ffc067;"></div>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Delivery Date / تاریخ:</label>
+                                    <input type="date" id="scanDate" class="scan-in w-full" style="font-size:14px;">
+                                    <div id="scanDateNote" class="mt-1 text-[11px]" style="color:#ffc067;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="scan-box p-2 rounded-xl">
+                            <div class="flex justify-between items-center mb-1 px-1">
+                                <span class="font-bold"><i class="fa-solid fa-boxes-stacked mr-1"></i> Products — <span id="scanCount">0</span></span>
+                                <span class="text-[10px]" style="color:#8fb3c9;">
+                                    <span style="color:#5dffa6"><i class="fa-solid fa-check"></i> درست</span> &nbsp;
+                                    <span style="color:#8fd3ff"><i class="fa-solid fa-wand-magic-sparkles"></i> خود درست کیا</span> &nbsp;
+                                    <span style="color:#ffc067"><i class="fa-solid fa-triangle-exclamation"></i> چیک کریں</span>
+                                </span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="scan-table w-full border-collapse" style="min-width:800px;">
+                                    <thead>
+                                        <tr>
+                                            <th class="p-1" style="width:30px;"></th>
+                                            <th class="p-1 text-left">Code</th>
+                                            <th class="p-1 text-left">Product</th>
+                                            <th class="p-1 text-right">Rate</th>
+                                            <th class="p-1 text-right">Qty</th>
+                                            <th class="p-1 text-right">Value</th>
+                                            <th class="p-1 text-right">Discount</th>
+                                            <th class="p-1 text-right">Tax</th>
+                                            <th class="p-1 text-right">Net</th>
+                                            <th class="p-1" style="width:30px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scanItemsBody"></tbody>
+                                    <tfoot>
+                                        <tr class="font-bold">
+                                            <td></td><td colspan="3" class="p-1">TOTAL</td>
+                                            <td id="scanTotQty" class="p-1 text-right">0</td>
+                                            <td id="scanTotGross" class="p-1 text-right">0.00</td>
+                                            <td id="scanTotDisc" class="p-1 text-right">0.00</td>
+                                            <td id="scanTotTax" class="p-1 text-right">0.00</td>
+                                            <td id="scanTotNet" class="p-1 text-right" style="color:#ffe27a;">0.00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <button type="button" onclick="addScanRow()" class="mt-2 scan-btn-blue"><i class="fa-solid fa-plus"></i> Add Row</button>
+                        </div>
+
+                        <div class="scan-box p-3 rounded-xl">
+                            <div class="flex flex-wrap items-center gap-2 mb-2">
+                                <label class="font-semibold">انوائس پر لکھا TOTAL AMOUNT:</label>
+                                <input type="number" step="0.01" id="scanPhotoTotal" oninput="updateScanTotals()" class="scan-in text-right font-bold" style="width:150px;">
+                                <input type="hidden" id="scanTotalCands">
+                            </div>
+                            <div id="scanTotalBanner"></div>
+                        </div>
+
+                        <div class="flex justify-end gap-2">
+                            <button type="button" onclick="startNextPageScan()" class="scan-btn-grey"><i class="fa-solid fa-file-circle-plus"></i> اگلا صفحہ</button>
+                            <button type="button" onclick="closeScanModal()" class="scan-btn-grey">Cancel</button>
+                            <button type="button" id="btnApproveScan" onclick="approveScan()" class="scan-btn-green"><i class="fa-solid fa-circle-check mr-1"></i> Approve & Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1049,8 +1360,12 @@
                     document.getElementById('activeUserLabel').innerText = `${currentUser.name} (${currentUser.role.toUpperCase()})`;
 
                     applyRolePermissions();
+                    updateProductDatalist();
+                    renderPendingItems();
+                    try { const sp = localStorage.getItem('aq_ledger_sort'); if (sp) document.getElementById('ledgerSortOrder').value = sp; } catch (e) { }
                     populateFilterDropdowns();
                     renderHistory();
+                    refreshPhotoCounts().then(() => renderHistory());
                 });
             } else {
                 alert("یوزر نیم یا پاسورڈ درست نہیں ہے!");
@@ -1148,6 +1463,8 @@
         }
 
         function logout() {
+            if (pendingItems.length > 0 && !confirm("انوائس کے پروڈکٹس ابھی محفوظ نہیں ہوئے۔ کیا پھر بھی لاگ آؤٹ کریں؟")) return;
+            pendingItems = [];
             currentUser = null;
             document.getElementById('loginForm').reset();
             document.getElementById('loginPass').type = 'password';
@@ -1155,60 +1472,1224 @@
             document.getElementById('loginModal').classList.remove('hidden');
         }
 
-        /* MANUAL NEW ENTRY CALCULATIONS & HANDLER */
+        /* ===== MULTI-PRODUCT INVOICE ENTRY ===== */
+        let pendingItems = [];
+        const GENERIC_PRODUCT_NAMES = ["COCA-COLA MANUAL ENTRY", "COCA-COLA INVOICE BUNDLE", "COCA-COLA DISTRIBUTION ITEMS"];
+        const fmt2 = n => (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const escHtml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
         function calcNewEntryNet() {
-            const gross = parseFloat(document.getElementById('newEntryGross').value) || 0;
-            const disc = parseFloat(document.getElementById('newEntryMargin').value) || 0;
-            const tax = parseFloat(document.getElementById('newEntryTax').value) || 0;
+            const gross = parseFloat(document.getElementById('lineGross').value) || 0;
+            const disc = parseFloat(document.getElementById('lineMargin').value) || 0;
+            const tax = parseFloat(document.getElementById('lineTax').value) || 0;
             document.getElementById('newEntryNet').value = (gross - disc + tax).toFixed(2);
         }
 
-        function handleManualNewEntry(e) {
-            e.preventDefault();
+        function readProductLine() {
+            const productName = document.getElementById('lineProduct').value.trim();
+            const qty = parseFloat(document.getElementById('lineQty').value) || 0;
+            const gross = parseFloat(document.getElementById('lineGross').value) || 0;
+            const discAmt = parseFloat(document.getElementById('lineMargin').value) || 0;
+            const taxAmt = parseFloat(document.getElementById('lineTax').value) || 0;
+            return { productName, qty, gross, discAmt, taxAmt, net: gross - discAmt + taxAmt };
+        }
+
+        function resetProductLine() {
+            ['lineProduct', 'lineQty', 'lineGross', 'lineMargin', 'lineTax', 'newEntryNet'].forEach(id => document.getElementById(id).value = '');
+        }
+
+        function addProductLine(e) {
+            if (e) e.preventDefault();
+            if (currentUser && currentUser.role === 'auditor') {
+                alert("Auditor کو ڈیٹا شامل کرنے کی اجازت نہیں ہے۔");
+                return;
+            }
+            const line = readProductLine();
+            if (!line.productName) { alert("براہ کرم پروڈکٹ کا نام لکھیں۔"); return; }
+            if (line.qty === 0 && line.gross === 0) { alert("براہ کرم Qty یا Value درج کریں۔"); return; }
+
+            pendingItems.push(line);
+            resetProductLine();
+            renderPendingItems();
+            document.getElementById('lineProduct').focus();
+        }
+
+        function removePendingItem(idx) {
+            pendingItems.splice(idx, 1);
+            renderPendingItems();
+        }
+
+        function renderPendingItems() {
+            const body = document.getElementById('pendingItemsBody');
+            let tQty = 0, tNet = 0;
+            if (pendingItems.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="p-2 border text-center text-gray-500">ابھی کوئی پروڈکٹ شامل نہیں کیا گیا</td></tr>`;
+            } else {
+                body.innerHTML = pendingItems.map((it, i) => {
+                    tQty += it.qty; tNet += it.net;
+                    return `<tr>
+                        <td class="p-1 border font-semibold" title="Value: ${fmt2(it.gross)} | Margin: ${fmt2(it.discAmt)} | Tax: ${fmt2(it.taxAmt)}">${i + 1}. ${escHtml(it.productName)}</td>
+                        <td class="p-1 border text-right">${it.qty}</td>
+                        <td class="p-1 border text-right">${fmt2(it.net)}</td>
+                        <td class="p-1 border text-center"><button type="button" onclick="removePendingItem(${i})" class="text-red-600 hover:text-red-800" title="Remove"><i class="fa-solid fa-xmark"></i></button></td>
+                    </tr>`;
+                }).join('');
+            }
+            document.getElementById('pendingCount').innerText = `${pendingItems.length} item${pendingItems.length === 1 ? '' : 's'}`;
+            document.getElementById('pendingQty').innerText = tQty.toLocaleString();
+            document.getElementById('pendingNet').innerText = fmt2(tNet);
+        }
+
+        function clearPendingInvoice() {
+            if (pendingItems.length > 0 && !confirm("کیا آپ اس انوائس کے تمام پروڈکٹس ہٹانا چاہتے ہیں؟ (ابھی محفوظ نہیں ہوئے)")) return;
+            pendingItems = [];
+            resetProductLine();
+            document.getElementById('newEntryInvNo').value = '';
+            checkDuplicateInvoiceLive();
+            renderPendingItems();
+        }
+
+        function saveAllInvoice(opts) {
+            opts = opts || {};
             if (currentUser && currentUser.role === 'auditor') {
                 alert("Auditor کو ڈیٹا شامل کرنے کی اجازت نہیں ہے۔");
                 return;
             }
             const date = document.getElementById('newEntryDate').value;
             const invNo = document.getElementById('newEntryInvNo').value.trim();
-            const qty = parseFloat(document.getElementById('newEntryQty').value) || 0;
-            const gross = parseFloat(document.getElementById('newEntryGross').value) || 0;
-            const margin = parseFloat(document.getElementById('newEntryMargin').value) || 0;
-            const tax = parseFloat(document.getElementById('newEntryTax').value) || 0;
-            const net = parseFloat(document.getElementById('newEntryNet').value) || 0;
+            if (!date) { alert("براہ کرم تاریخ منتخب کریں۔"); return; }
+            if (!invNo) { alert("براہ کرم انوائس نمبر درج کریں۔"); document.getElementById('newEntryInvNo').focus(); return; }
 
-            if (!invNo) {
-                alert("براہ کرم انوائس نمبر درج کریں۔");
-                return;
+            // Product typed but "Add Product" not pressed
+            const line = readProductLine();
+            if (line.productName && (line.qty !== 0 || line.gross !== 0)) {
+                if (confirm(`"${line.productName}" ابھی لسٹ میں شامل نہیں ہوا۔ کیا اسے بھی اس انوائس میں شامل کر دیں؟`)) {
+                    pendingItems.push(line);
+                    resetProductLine();
+                }
             }
 
-            invoices.unshift({
-                id: Date.now(),
-                date: date,
-                invoiceNo: invNo,
-                productName: "COCA-COLA MANUAL ENTRY",
-                qty: qty,
-                rate: qty > 0 ? (gross / qty) : gross,
-                gross: gross,
-                discAmt: margin,
-                taxAmt: tax,
-                net: net
-            });
+            if (pendingItems.length === 0) { alert("پہلے کم از کم ایک پروڈکٹ Add کریں۔"); return; }
 
+            let saveInvNo = invNo, saveDate = date;
+            const existing = findExistingInvoice(invNo);
+            if (existing) {
+                const msg = `⚠ انوائس نمبر ${existing.invoiceNo} پہلے سے محفوظ ہے!\n` +
+                    `تاریخ: ${existing.date} | ${existing.count} پروڈکٹس | رقم: ${fmt2(existing.net)}\n\n` +
+                    `OK = یہ ${pendingItems.length} پروڈکٹس اسی پرانی انوائس میں شامل کر دیں` +
+                    (existing.date !== date ? ` (تاریخ ${existing.date} ہی رہے گی)` : '') +
+                    `\nCancel = کچھ محفوظ نہ کریں، میں انوائس نمبر درست کرتا ہوں`;
+                if (!confirm(msg)) { document.getElementById('newEntryInvNo').focus(); return; }
+                saveInvNo = existing.invoiceNo;   // same spelling -> truly one invoice
+                saveDate = existing.date;         // same date -> one row in ledger
+            }
+
+            const base = Date.now();
+            const newRows = pendingItems.map((it, i) => ({
+                id: base + i,
+                date: saveDate,
+                invoiceNo: saveInvNo,
+                productCode: it.productCode || '',
+                productName: it.productName,
+                qty: it.qty,
+                rate: it.qty > 0 ? (it.gross / it.qty) : it.gross,
+                gross: it.gross,
+                discAmt: it.discAmt,
+                taxAmt: it.taxAmt,
+                net: it.net
+            }));
+            invoices.unshift(...newRows);
             localStorage.setItem('aq_invoices', JSON.stringify(invoices));
 
-            // Reset form fields
+            const count = newRows.length;
+            const totalNet = newRows.reduce((s, r) => s + r.net, 0);
+            pendingItems = [];
             document.getElementById('newEntryInvNo').value = '';
-            document.getElementById('newEntryQty').value = '';
-            document.getElementById('newEntryGross').value = '';
-            document.getElementById('newEntryMargin').value = '';
-            document.getElementById('newEntryTax').value = '';
-            document.getElementById('newEntryNet').value = '';
-
+            checkDuplicateInvoiceLive();
+            renderPendingItems();
+            updateProductDatalist();
             populateFilterDropdowns();
+            ensureMonthVisible(saveDate);
             renderHistory();
-            alert("نئی انوائس کامیابی سے محفوظ ہو گئی ہے!");
+            if (!opts.silent) alert(`انوائس ${saveInvNo} محفوظ ہو گئی!\n${count} پروڈکٹس — کل رقم: ${fmt2(totalNet)}`);
+            return saveInvNo;
         }
+
+        function findExistingInvoice(invNo) {
+            const key = String(invNo || '').trim().toLowerCase();
+            if (!key) return null;
+            const rows = invoices.filter(i => String(i.invoiceNo).trim().toLowerCase() === key);
+            if (rows.length === 0) return null;
+            return {
+                invoiceNo: rows[0].invoiceNo,
+                date: rows[0].date,
+                count: rows.length,
+                net: rows.reduce((s, r) => s + (r.net || 0), 0)
+            };
+        }
+
+        function checkDuplicateInvoiceLive() {
+            const box = document.getElementById('dupInvoiceWarning');
+            const ex = findExistingInvoice(document.getElementById('newEntryInvNo').value);
+            if (!ex) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+            box.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> یہ انوائس پہلے سے موجود ہے!<br>
+                <span class="font-normal">${escHtml(ex.invoiceNo)} — تاریخ ${ex.date} — ${ex.count} پروڈکٹس — رقم ${fmt2(ex.net)}</span>`;
+            box.classList.remove('hidden');
+        }
+
+        function updateProductDatalist() {
+            const names = new Set();
+            invoices.forEach(i => {
+                if (i.productName && !GENERIC_PRODUCT_NAMES.includes(i.productName)) names.add(i.productName);
+            });
+            document.getElementById('productNameList').innerHTML =
+                Array.from(names).sort().map(n => `<option value="${escHtml(n)}"></option>`).join('');
+        }
+
+        /* ================= INVOICE PHOTO SCANNER (OCR) ================= */
+        const TESS_SRC = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+        const TAX_RATES = [0.001, 0.0005, 0.0015, 0.002, 0.0025, 0.003, 0.005, 0.01];
+        let ocrWorker = null, ocrProgressCb = null, ocrBusy = false;
+        let scanRows = [];
+        let scanPhotoUrl = null;
+
+        const r2 = v => Math.round((Number(v) || 0) * 100) / 100;
+        const near = (x, y) => Math.abs(x - y) < 0.006;
+        const centsStr = v => String(Math.round(Math.abs(v) * 100));
+
+        /* ---------- Product catalog (learned from approved scans) ---------- */
+        let productCatalog = {};
+        try { productCatalog = JSON.parse(localStorage.getItem('aq_product_catalog')) || {}; } catch (e) { productCatalog = {}; }
+        function saveCatalog() { localStorage.setItem('aq_product_catalog', JSON.stringify(productCatalog)); }
+
+        /* ---------- Small helpers ---------- */
+        function lev(a, b) {
+            a = String(a); b = String(b);
+            const m = a.length, n = b.length;
+            if (!m) return n; if (!n) return m;
+            let prev = Array.from({ length: n + 1 }, (_, j) => j);
+            for (let i = 1; i <= m; i++) {
+                const cur = [i];
+                for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+                prev = cur;
+            }
+            return prev[n];
+        }
+        const minLev = (s, list) => list.length ? Math.min(...list.map(x => lev(s, x))) : 1;
+        function nameSim(a, b) {
+            a = String(a).toUpperCase().replace(/[^A-Z0-9]/g, ''); b = String(b).toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (!a || !b) return 0;
+            return 1 - lev(a, b) / Math.max(a.length, b.length);
+        }
+
+        const OCR_DIGIT_MAP = { '£': '8', '&': '8', O: '0', o: '0', Q: '0', D: '0', I: '1', l: '1', '|': '1', i: '1', '!': '1', Z: '2', z: '2', S: '5', s: '5', $: '5', G: '6', b: '6', B: '8', g: '9', q: '9' };
+        const digitsOf = s => String(s || '').split('').map(ch => /\d/.test(ch) ? ch : (OCR_DIGIT_MAP[ch] || '')).join('');
+        function parseMoney(s) {   // invoice money always has 2 decimals: 308.190,96 -> 308190.96
+            const d = digitsOf(s);
+            if (!d || d.length > 12) return null;
+            return parseInt(d, 10) / 100;
+        }
+        function parseInt2(s) {
+            const d = digitsOf(s);
+            if (!d || d.length > 7) return null;
+            return parseInt(d, 10);
+        }
+        function uniqNums(arr) {
+            const seen = new Set(), out = [];
+            arr.forEach(v => {
+                if (v == null || !isFinite(v) || v <= 0) return;
+                const k = Math.round(v * 100);
+                if (!seen.has(k)) { seen.add(k); out.push(v); }
+            });
+            return out;
+        }
+        // all numbers reachable by changing / adding / removing ONE digit
+        function digitVariants(v, isInt) {
+            const s = isInt ? String(Math.round(v)) : centsStr(v);
+            const out = new Set();
+            for (let i = 0; i <= s.length; i++) {
+                for (let dgt = 0; dgt <= 9; dgt++) {
+                    out.add(s.slice(0, i) + dgt + s.slice(i));                 // insert
+                    if (i < s.length && String(dgt) !== s[i]) out.add(s.slice(0, i) + dgt + s.slice(i + 1)); // replace
+                }
+                if (i < s.length) out.add(s.slice(0, i) + s.slice(i + 1));    // delete
+            }
+            return Array.from(out).filter(x => x && !/^0\d/.test(x)).map(x => isInt ? parseInt(x, 10) : parseInt(x, 10) / 100).filter(x => x > 0);
+        }
+
+        /* ---------- Load OCR engine ---------- */
+        function loadScriptOnce(src) {
+            return new Promise((res, rej) => {
+                if (document.querySelector(`script[src="${src}"]`) && window.Tesseract) return res();
+                const s = document.createElement('script');
+                s.src = src; s.onload = () => res(); s.onerror = () => rej(new Error('OCR engine load نہیں ہو سکا — انٹرنیٹ چیک کریں'));
+                document.head.appendChild(s);
+            });
+        }
+        async function getOcrWorker() {
+            if (!window.Tesseract) await loadScriptOnce(TESS_SRC);
+            if (!ocrWorker) ocrWorker = await Tesseract.createWorker('eng', 1, { logger: m => { if (ocrProgressCb) ocrProgressCb(m); } });
+            return ocrWorker;
+        }
+
+        /* ---------- Image preparation ---------- */
+        function loadImageFile(file) {
+            return new Promise((res, rej) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => res({ img, url });
+                img.onerror = () => rej(new Error('یہ فائل تصویر کے طور پر نہیں کھل سکی'));
+                img.src = url;
+            });
+        }
+        function makeCanvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+        function prepareCanvases(img) {
+            const TARGET = 2800;
+            const scale = Math.max(0.3, Math.min(TARGET / img.naturalWidth, 3));
+            const W = Math.round(img.naturalWidth * scale), H = Math.round(img.naturalHeight * scale);
+
+            const plain = makeCanvas(W, H);
+            const pctx = plain.getContext('2d');
+            pctx.fillStyle = '#fff'; pctx.fillRect(0, 0, W, H);
+            pctx.drawImage(img, 0, 0, W, H);
+
+            const bin = makeCanvas(W, H);
+            const ctx = bin.getContext('2d', { willReadFrequently: true });
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+            const blurPx = Math.max(0.8, 1.5 * W / 3386);
+            ctx.filter = `grayscale(1) blur(${blurPx.toFixed(2)}px)`;   // joins dot-matrix dots into strokes
+            ctx.drawImage(img, 0, 0, W, H);
+            ctx.filter = 'none';
+
+            const id = ctx.getImageData(0, 0, W, H), d = id.data, N = W * H;
+            const gray = new Uint8Array(N);
+            for (let i = 0, j = 0; j < N; i += 4, j++) gray[j] = (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000;
+
+            // Bradley adaptive threshold (handles shadows in phone photos)
+            const integral = (255 * N > 4.2e9) ? new Float64Array(N) : new Uint32Array(N);
+            for (let y = 0; y < H; y++) {
+                let row = 0;
+                for (let x = 0; x < W; x++) {
+                    const k = y * W + x; row += gray[k];
+                    integral[k] = row + (y ? integral[k - W] : 0);
+                }
+            }
+            const half = Math.max(8, Math.round(W / 24)), T = 0.15;
+            const I = (x, y) => (x < 0 || y < 0) ? 0 : integral[y * W + x];
+            for (let y = 0; y < H; y++) {
+                const y1 = Math.max(0, y - half) - 1, y2 = Math.min(H - 1, y + half);
+                for (let x = 0; x < W; x++) {
+                    const x1 = Math.max(0, x - half) - 1, x2 = Math.min(W - 1, x + half);
+                    const count = (x2 - x1) * (y2 - y1);
+                    const sum = I(x2, y2) - I(x1, y2) - I(x2, y1) + I(x1, y1);
+                    const v = (gray[y * W + x] * count <= sum * (1 - T)) ? 0 : 255;
+                    const p = (y * W + x) * 4; d[p] = d[p + 1] = d[p + 2] = v; d[p + 3] = 255;
+                }
+            }
+            ctx.putImageData(id, 0, 0);
+            return { plain, bin, W, H };
+        }
+        function cropCanvas(src, x0, y0, x1, y1, pad = 10) {
+            x0 = Math.max(0, Math.floor(x0 - pad)); y0 = Math.max(0, Math.floor(y0 - pad));
+            x1 = Math.min(src.width, Math.ceil(x1 + pad)); y1 = Math.min(src.height, Math.ceil(y1 + pad));
+            const w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0);
+            const c = makeCanvas(w, h);
+            const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(src, x0, y0, w, h, 0, 0, w, h);
+            return { canvas: c, x0, y0 };
+        }
+        async function ocr(worker, canvas, params) {
+            await worker.setParameters(Object.assign({ tessedit_char_whitelist: '', preserve_interword_spaces: '1' }, params));
+            const { data } = await worker.recognize(canvas);
+            return data;
+        }
+        function shiftLines(data, dx, dy) {
+            const sb = b => ({ x0: b.x0 + dx, y0: b.y0 + dy, x1: b.x1 + dx, y1: b.y1 + dy });
+            return (data.lines || []).map(l => ({ text: l.text, bbox: sb(l.bbox), words: (l.words || []).map(w => ({ text: w.text, bbox: sb(w.bbox) })) }));
+        }
+        const cy = b => (b.y0 + b.y1) / 2;
+
+        /* ---------- Main reading pipeline ---------- */
+        async function readInvoiceImage(img, setStatus) {
+            setStatus('Photo تیار ہو رہی ہے...', 5);
+            const { plain, bin, W, H } = prepareCanvases(img);
+
+            setStatus('OCR engine load ہو رہا ہے (پہلی بار تھوڑا وقت لگے گا)...', 10);
+            const worker = await getOcrWorker();
+
+            // PASS 1 — full page text (names, labels, layout)
+            ocrProgressCb = m => { if (m.status === 'recognizing text') setStatus('پوری انوائس پڑھی جا رہی ہے...', 15 + Math.round(m.progress * 45)); };
+            const d1 = await ocr(worker, bin, { tessedit_pageseg_mode: '6' });
+            const lines1 = shiftLines(d1, 0, 0);
+            const words1 = lines1.flatMap(l => l.words);
+
+            // Layout: column headers
+            const clean = t => String(t).replace(/[^A-Za-z0-9]/g, '');
+            const rateW = words1.find(w => /^r[a4][t+f]e$/i.test(clean(w.text)) && cy(w.bbox) > H * 0.2);
+            const qtyW = words1.find(w => /^qu?a[a-z]{3,}$/i.test(clean(w.text)) && cy(w.bbox) > H * 0.2 && (!rateW || Math.abs(cy(w.bbox) - cy(rateW.bbox)) < 60));
+            const hdr = rateW || qtyW;
+            const itemsTop = hdr ? Math.max(rateW ? rateW.bbox.y1 : 0, qtyW ? qtyW.bbox.y1 : 0) + 4 : H * 0.35;
+            const charW = rateW ? (rateW.bbox.x1 - rateW.bbox.x0) / 4 : W / 75;
+            const rateRight = rateW ? rateW.bbox.x1 : (qtyW ? qtyW.bbox.x0 - charW * 4 : W * 0.66);
+            const qtyRight = qtyW ? qtyW.bbox.x1 : rateRight + charW * 9;
+            const amtW = hdr ? words1.find(w => Math.abs(cy(w.bbox) - cy(hdr.bbox)) < 60 && w.bbox.x0 > qtyRight + charW) : null;
+            const regionX0 = Math.max(0, rateRight - 14 * charW);
+
+            const totLines = lines1.filter(l => cy(l.bbox) > itemsTop && /T[O0Q]T[A4R]L|TOTAL|TOTRL/i.test(l.text));
+            const weightLine = totLines.find(l => /W[EI]|EIGH|IGHT/i.test(l.text));
+            const totalLine = totLines.find(l => l !== weightLine && (!weightLine || l.bbox.y0 >= weightLine.bbox.y0)) || null;
+            const itemsBottom = (weightLine || totalLine) ? (weightLine || totalLine).bbox.y0 - 2 : H;
+
+            // PASS 2 — numbers only (whitelist digits) on the numbers block
+            ocrProgressCb = m => { if (m.status === 'recognizing text') setStatus('رقمیں دوبارہ غور سے پڑھی جا رہی ہیں...', 60 + Math.round(m.progress * 25)); };
+            const numBottom = totalLine ? totalLine.bbox.y1 : itemsBottom;
+            const crop = cropCanvas(bin, regionX0, itemsTop, W, numBottom, 6);
+            const d2 = await ocr(worker, crop.canvas, { tessedit_pageseg_mode: '6', tessedit_char_whitelist: '0123456789.,-%' });
+            const lines2 = shiftLines(d2, crop.x0, crop.y0);
+
+            let amtRight = amtW ? amtW.bbox.x1 : 0;
+            if (!amtRight) amtRight = Math.max(qtyRight + charW * 10, ...lines2.flatMap(l => l.words.map(w => w.bbox.x1)));
+            const colOf = x1 => {
+                const ds = [['rate', Math.abs(x1 - rateRight)], ['qty', Math.abs(x1 - qtyRight)], ['amt', Math.abs(x1 - amtRight)]];
+                ds.sort((a, b) => a[1] - b[1]); return ds[0][0];
+            };
+            const colsFrom = words => {
+                const c = { rate: '', qty: '', amt: '' };
+                words.forEach(w => { if (w.bbox.x1 < regionX0 + charW) return; const k = colOf(w.bbox.x1); c[k] += (c[k] ? ' ' : '') + w.text; });
+                return c;
+            };
+
+            // Merge both passes line by line (by vertical position)
+            const entries = lines1.filter(l => cy(l.bbox) > itemsTop && cy(l.bbox) < itemsBottom)
+                .map(l => ({ y: cy(l.bbox), h: l.bbox.y1 - l.bbox.y0, text: l.text, w1: l.words, w2: [] }));
+            lines2.filter(l => cy(l.bbox) < itemsBottom).forEach(l => {
+                const c = cy(l.bbox); let best = null, bd = 1e9;
+                entries.forEach(e => { const dd = Math.abs(e.y - c); if (dd < bd) { bd = dd; best = e; } });
+                if (best && bd < Math.max(best.h, 24) * 0.7) best.w2.push(...l.words);
+                else entries.push({ y: c, h: l.bbox.y1 - l.bbox.y0, text: '', w1: [], w2: l.words });
+            });
+            entries.sort((a, b) => a.y - b.y);
+
+            // Classify & group: product line -> discount line -> income tax line
+            const items = [];
+            let cur = null;
+            entries.forEach(e => {
+                const c1 = colsFrom(e.w1), c2 = colsFrom(e.w2);
+                const nameText = e.w1.filter(w => w.bbox.x1 < regionX0 + charW).map(w => w.text).join(' ').trim();
+                const allNum = [c1.rate, c1.qty, c1.amt, c2.rate, c2.qty, c2.amt].join(' ');
+                const isDisc = /(gu[l1]ar|[sc]ou[an]t|d[il1|]sc|iscou|disco)/i.test(e.text);
+                const isTax = !isDisc && /(\bT[XK]\b|INC|NCO|CONE|\bAD[VU]\b|\bAOU\b|INEON|IMCO|IHCO|IWCO|IXC)/i.test(e.text);
+                let codeM = nameText.match(/([0-9A-Za-z£$&|!]{2,3})\s*[-–~]\s*([0-9]{3})\b/);
+                if (codeM && codeM.index > 14) codeM = null;
+                let code = '';
+                if (codeM) { const p = digitsOf(codeM[1]); if (/^\d{3}$/.test(p)) code = p + '-' + codeM[2]; }
+                const hasProductNums = (c2.rate || c1.rate) && (c2.qty || c1.qty) && (c2.amt || c1.amt);
+                const isHeaderLine = !code && /(R[a4]te|Qu[a4]nt|Amou|Pro[dc][uo]?[cg]?t\s*\/|\bDesc)/i.test(e.text);
+                if (isHeaderLine) return;
+                let type = isDisc ? 'disc' : isTax ? 'tax' : null;
+                if (!type) {
+                    if (code && hasProductNums) type = 'product';
+                    else if (hasProductNums && /-/.test(allNum)) type = 'disc';
+                    else if ((c2.rate || c1.rate) && (c2.amt || c1.amt) && !(c2.qty || c1.qty)) type = cur ? 'tax' : null;
+                    else if (hasProductNums && /[A-Za-z]{3,}/.test(nameText)) type = 'product';
+                }
+                if (type === 'product') {
+                    let name = nameText;
+                    if (codeM) name = nameText.slice(codeM.index + codeM[0].length);
+                    name = name.replace(/^[^A-Za-z0-9]+/, '').replace(/\s{2,}/g, ' ').trim();
+                    cur = { code, name, R: [parseMoney(c2.rate), parseMoney(c1.rate)], Q: [parseInt2(c2.qty), parseInt2(c1.qty)], A: [parseMoney(c2.amt), parseMoney(c1.amt)], D: [], DA: [], T: [] };
+                    items.push(cur);
+                } else if (cur && type === 'disc') {
+                    cur.D.push(parseMoney(c2.rate), parseMoney(c1.rate));
+                    cur.Q.push(parseInt2(c2.qty), parseInt2(c1.qty));
+                    cur.DA.push(parseMoney(c2.amt), parseMoney(c1.amt));
+                } else if (cur && type === 'tax') {
+                    cur.A.push(parseMoney(c2.rate), parseMoney(c1.rate));   // tax base = product value (2nd copy)
+                    cur.T.push(parseMoney(c2.amt), parseMoney(c1.amt));
+                }
+            });
+
+            // Header: invoice no + date (re-read with digits-only)
+            setStatus('انوائس نمبر اور تاریخ پڑھی جا رہی ہے...', 88);
+            const topLines = lines1.filter(l => cy(l.bbox) < (hdr ? hdr.bbox.y0 : H * 0.45));
+            const invPool = topLines.filter(l => /\d{8,}/.test(l.text.replace(/\s/g, '')) && !/SHIP|HIP|ORDER|DATE|PHON|TELE|CODE|COPE|DELIVERY:|SH[DBM]\/|PLOT|MULTAN|\d-\d/i.test(l.text));
+            const invLine = invPool.find(l => /[I1lT][NRHM]?[VYB]?[O0D][I1l][CG]E|VOIC|DICE|D1CE|\bINV/i.test(l.text)) || invPool[0] || null;
+            const dateLines = topLines.filter(l => /DATE|DAT[EF]/i.test(l.text) && /\d/.test(l.text));
+            dateLines.sort((a, b) => (/DEL/i.test(b.text) ? 1 : 0) - (/DEL/i.test(a.text) ? 1 : 0));
+
+            async function digitsPass(line, whitelist) {
+                const dw = line.words.filter(w => /\d/.test(w.text) && w.bbox.x0 > line.bbox.x0 + (line.bbox.x1 - line.bbox.x0) * 0.25);
+                if (!dw.length) return '';
+                const cc = cropCanvas(bin, Math.min(...dw.map(w => w.bbox.x0)), line.bbox.y0, line.bbox.x1, line.bbox.y1, 8);
+                const dd = await ocr(worker, cc.canvas, { tessedit_pageseg_mode: '7', tessedit_char_whitelist: whitelist });
+                return (dd.text || '').trim();
+            }
+            const invCands = [];
+            if (invLine) {
+                const t2 = await digitsPass(invLine, '0123456789');
+                (t2.match(/\d{7,}/g) || []).forEach(x => invCands.push(x));
+                (invLine.text.replace(/\s/g, '').match(/\d{7,}/g) || []).forEach(x => invCands.push(x));
+            }
+            const dateCands = [];
+            for (const dl of dateLines.slice(0, 2)) {
+                dateCands.push(await digitsPass(dl, '0123456789.'));
+                dateCands.push(dl.text);
+            }
+
+            // Total amount line
+            const totalCands = [];
+            if (totalLine) {
+                const t2 = await digitsPass(totalLine, '0123456789.,');
+                [t2, totalLine.words.filter(w => w.bbox.x0 > regionX0).map(w => w.text).join('')].forEach(s => { const v = parseMoney(s); if (v) totalCands.push(v); });
+            }
+            lines2.filter(l => totalLine && Math.abs(cy(l.bbox) - cy(totalLine.bbox)) < 30).forEach(l => { const v = parseMoney(l.text); if (v) totalCands.push(v); });
+
+            // Header preview image (from the plain photo)
+            let headerImg = '';
+            const hl = [invLine, ...dateLines].filter(Boolean);
+            if (hl.length) {
+                const realWords = hl.flatMap(l => l.words).filter(w => /[A-Za-z0-9]{3,}/.test(w.text));
+                const hx0 = realWords.length ? Math.min(...realWords.map(w => w.bbox.x0)) : Math.min(...hl.map(l => l.bbox.x0));
+                const hc = cropCanvas(plain, hx0, Math.min(...hl.map(l => l.bbox.y0)), Math.max(...hl.map(l => l.bbox.x1)), Math.max(...hl.map(l => l.bbox.y1)), 14);
+                headerImg = hc.canvas.toDataURL('image/jpeg', 0.85);
+            }
+            setStatus('حساب چیک ہو رہا ہے...', 96);
+            return { items, invCands, dateCands, totalCands, headerImg };
+        }
+
+        /* ---------- Self-checking maths (fixes misread digits) ---------- */
+        function solveProduct(it) {
+            const R = uniqNums(it.R), Q = uniqNums(it.Q).filter(q => Number.isInteger(q)), A = uniqNums(it.A);
+            for (const r of R) for (const q of Q) for (const a of A) if (near(r2(r * q), a)) return { r, q, a, status: 'ok', notes: [] };
+            const cand = [];
+            for (const r of R) for (const a of A) {
+                const q = Math.round(a / r);
+                if (q > 0 && near(r2(r * q), a)) { const e = minLev(String(q), Q.map(String)); if (e <= 2) cand.push({ r, q, a, e, note: `Qty ${Q[0] ?? '?'} → ${q}` }); }
+            }
+            for (const r of R) for (const q of Q) {
+                const a = r2(r * q); const e = minLev(centsStr(a), A.map(centsStr));
+                if (e <= 2) cand.push({ r, q, a, e, note: `Value ${A.length ? fmt2(A[0]) : '?'} → ${fmt2(a)}` });
+            }
+            for (const a of A) for (const q of Q) {
+                const r = r2(a / q);
+                if (near(r2(r * q), a)) { const e = minLev(centsStr(r), R.map(centsStr)); if (e <= 2) cand.push({ r, q, a, e, note: `Rate ${R.length ? fmt2(R[0]) : '?'} → ${fmt2(r)}` }); }
+            }
+            if (cand.length) { cand.sort((x, y) => x.e - y.e); const c = cand[0]; return { r: c.r, q: c.q, a: c.a, status: 'fixed', notes: [c.note] }; }
+            const r = R[0] || 0, q = Q[0] || 0, a = A[0] || r2(r * q);
+            return { r, q, a, status: 'check', notes: ['Rate × Qty اور Value آپس میں نہیں مل رہے'] };
+        }
+        function solveTax(a, Tarr) {
+            const T = uniqNums(Tarr), e = r2(a * 0.001);
+            for (const t of T) for (const p of TAX_RATES) if (near(r2(a * p), t)) return { t, status: 'ok', notes: [] };
+            for (const t of T) if (lev(centsStr(t), centsStr(e)) <= 2) return { t: e, status: 'fixed', notes: [`Tax ${fmt2(t)} → ${fmt2(e)}`] };
+            if (!T.length) return { t: e, status: 'fixed', notes: ['Tax حساب سے لگایا (0.10%)'] };
+            return { t: T[0], status: 'check', notes: [`Tax ${fmt2(T[0])} — 0.10% کے حساب سے ${fmt2(e)} ہونا چاہیے`] };
+        }
+        function solveDisc(q, a, Darr, DAarr) {
+            const D = uniqNums(Darr), DA = uniqNums(DAarr);
+            if (!D.length && !DA.length) return { d: 0, da: 0, status: 'check', notes: ['Discount لائن نہیں ملی'] };
+            const tol = q * 0.005 + 0.011;
+            const okPair = (d, da) => Math.abs(d * q - da) <= tol && da < a * 0.5;
+            // invoice discounts are a clean % of value (e.g. 6.270%) -> amount = value × pct
+            const cleanPct = da => { const k = Math.round(da / a * 1e5); return k > 0 && Math.abs(r2(a * k / 1e5) - da) <= 0.011; };
+            const mk = (d, da, e, note) => ({ d, da, e, clean: cleanPct(da), diff: Math.abs(d * q - da), note });
+            const pick = list => { list.sort((x, y) => (x.e - y.e) || ((y.clean ? 1 : 0) - (x.clean ? 1 : 0)) || (x.diff - y.diff)); return list[0]; };
+
+            const exact = [];
+            for (const d of D) for (const da of DA) if (okPair(d, da)) exact.push(mk(d, da, 0));
+            const exactClean = exact.filter(x => x.clean);
+            if (exactClean.length) { const p = pick(exactClean); return { d: p.d, da: p.da, status: 'ok', notes: [] }; }
+
+            const c = [];
+            for (const d of D) for (const da of DA) {
+                digitVariants(da).forEach(v => { if (okPair(d, v)) c.push(mk(d, v, 1, `Discount ${fmt2(da)} → ${fmt2(v)}`)); });
+                digitVariants(d).forEach(v => { if (okPair(v, da)) c.push(mk(v, da, 1, `Disc. rate ${fmt2(d)} → ${fmt2(v)}`)); });
+            }
+            if (exact.length) {
+                // a 1-digit fix that gives a clean % beats an unclean exact read
+                const cc = c.filter(x => x.clean && !exact.some(ex => near(ex.da, x.da)));
+                if (cc.length) { const p = pick(cc); return { d: p.d, da: p.da, status: 'fixed', notes: [p.note] }; }
+                const p = pick(exact); return { d: p.d, da: p.da, status: 'ok', notes: [] };
+            }
+            if (!c.length) for (const d of D) for (const da of DA) {
+                const dv = digitVariants(d), av = digitVariants(da);
+                dv.forEach(x => av.forEach(y => { if (okPair(x, y) && cleanPct(y)) c.push(mk(x, y, 2, `Discount ${fmt2(da)} → ${fmt2(y)}`)); }));
+            }
+            if (c.length) { const p = pick(c); return { d: p.d, da: p.da, status: p.clean ? 'fixed' : 'check', notes: [p.note + (p.clean ? '' : ' (یقینی نہیں)')] }; }
+            if (D.length) return { d: D[0], da: r2(D[0] * q), status: 'check', notes: ['Discount رقم صاف نہیں پڑھی گئی — Rate × Qty سے لگائی'] };
+            return { d: 0, da: DA[0], status: 'check', notes: ['Discount چیک کریں'] };
+        }
+        const worstStatus = (...s) => s.includes('check') ? 'check' : s.includes('fixed') ? 'fixed' : 'ok';
+
+        function pickInvoiceNo(cands) {
+            const c = cands.filter(x => x.length >= 7 && x.length <= 14);
+            return c[0] || '';
+        }
+        const DIGIT_CONFUSION = { '0': '689', '1': '47', '2': '7', '3': '89', '4': '1', '5': '6', '6': '058', '7': '12', '8': '0369', '9': '038' };
+        function pickDate(cands) {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const yr = today.getFullYear();
+            let best = null;
+            const consider = (d, m, y, edits) => {
+                if (!(m >= 1 && m <= 12 && d >= 1 && d <= 31)) return;
+                const dt = new Date(y, m - 1, d);
+                if (dt.getMonth() !== m - 1) return;
+                const diff = Math.abs((dt - today) / 864e5);
+                if (diff > 150) return;
+                const score = edits * 1000 + diff;
+                if (!best || score < best.score) best = { score, iso: `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`, edits };
+            };
+            cands.forEach(s => {
+                const m = digitsOf(String(s)).length ? String(s).replace(/[^0-9A-Za-z.\/-]+/g, ' ').match(/([0-9A-Za-z]{1,2})\s*[.\/-]\s*([0-9A-Za-z]{1,2})\s*[.\/-]\s*([0-9A-Za-z]{2,4})/) : null;
+                if (!m) return;
+                const ds = digitsOf(m[1]).padStart(2, '0'), ms = digitsOf(m[2]).padStart(2, '0');
+                let y = parseInt(digitsOf(m[3]), 10); if (y < 100) y += 2000;
+                const yEdits = (y >= yr - 1 && y <= yr + 1) ? 0 : 1;
+                if (yEdits) y = yr;
+                const vars = str => {
+                    const out = [[str, 0]];
+                    for (let i = 0; i < str.length; i++) (DIGIT_CONFUSION[str[i]] || '').split('').forEach(ch => out.push([str.slice(0, i) + ch + str.slice(i + 1), 1]));
+                    return out;
+                };
+                vars(ds).forEach(([dd, e1]) => vars(ms).forEach(([mm, e2]) => consider(parseInt(dd, 10), parseInt(mm, 10), y, e1 + e2 + yEdits)));
+            });
+            if (best) return { iso: best.iso, sure: best.edits === 0 };
+            return { iso: new Date().toISOString().split('T')[0], sure: false };
+        }
+
+        function matchCatalog(code, name, rate) {
+            const entries = Object.entries(productCatalog);
+            if (!entries.length) return null;
+            if (code && productCatalog[code]) return { code, name: productCatalog[code].name };
+            let best = null;
+            entries.forEach(([c, p]) => {
+                let score = 0;
+                if (code && lev(code, c) <= 1) score += 2;
+                if (rate && p.rate && near(rate, p.rate)) score += 2;
+                const ns = nameSim(name, p.name);
+                if (ns >= 0.75) score += 2; else if (ns >= 0.5) score += 1;
+                if (score >= 3 && (!best || score > best.score)) best = { score, code: c, name: p.name };
+            });
+            return best;
+        }
+
+        function buildScanRows(res) {
+            return res.items.filter(it => uniqNums(it.A).length || uniqNums(it.R).length).map(it => {
+                const p = solveProduct(it);
+                const t = solveTax(p.a, it.T);
+                const ds = solveDisc(p.q, p.a, it.D, it.DA);
+                const notes = [...p.notes, ...ds.notes, ...t.notes];
+                let code = it.code, name = it.name, fromCatalog = false;
+                const m = matchCatalog(code, name, p.r);
+                if (m) { if (m.code !== code && code) notes.push(`Code ${code} → ${m.code}`); code = m.code; name = m.name; fromCatalog = true; }
+                return { code, name, rate: p.r, qty: p.q, gross: p.a, disc: ds.da, tax: t.t, status: worstStatus(p.status, ds.status, t.status), notes, fromCatalog };
+            });
+        }
+
+        /* ---------- Scan modal UI ---------- */
+        function startInvoiceScan() {
+            if (currentUser && currentUser.role === 'auditor') { alert("Auditor کو ڈیٹا شامل کرنے کی اجازت نہیں ہے۔"); return; }
+            if (ocrBusy) return;
+            document.getElementById('scanFileInput').click();
+        }
+
+        /* ---------- Multi-page scan ---------- */
+        let scanPages = [];          // [{ blob, url }]
+        let scanAppendMode = false;
+
+        function compressImage(img, maxW = 1600, quality = 0.75) {
+            const scale = Math.min(1, maxW / img.naturalWidth);
+            const c = makeCanvas(Math.round(img.naturalWidth * scale), Math.round(img.naturalHeight * scale));
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+            ctx.drawImage(img, 0, 0, c.width, c.height);
+            return new Promise(res => c.toBlob(b => res(b), 'image/jpeg', quality));
+        }
+
+        function startNextPageScan() {
+            if (ocrBusy) return;
+            scanAppendMode = true;
+            document.getElementById('scanFileInput').click();
+        }
+
+        function renderScanPageThumbs() {
+            const box = document.getElementById('scanPageThumbs');
+            box.innerHTML = scanPages.map((p, i) => `
+                <button type="button" onclick="showScanPage(${i})" class="scan-thumb" title="Page ${i + 1}">
+                    <img src="${p.url}" alt=""><span>Page ${i + 1}</span>
+                </button>`).join('');
+        }
+        function showScanPage(i) {
+            if (scanPages[i]) document.getElementById('scanPhoto').src = scanPages[i].url;
+            document.querySelectorAll('#scanPageThumbs .scan-thumb').forEach((b, k) => b.classList.toggle('active', k === i));
+        }
+
+        async function handleScanFile(e) {
+            const file = e.target.files && e.target.files[0];
+            e.target.value = '';
+            const append = scanAppendMode && scanPages.length > 0;
+            scanAppendMode = false;
+            if (!file) return;
+            if (!/^image\//.test(file.type)) { alert("براہ کرم تصویر (JPG / PNG) منتخب کریں۔"); return; }
+
+            ocrBusy = true;
+            if (!append) { resetScanState(); }
+            document.getElementById('scanModal').classList.remove('hidden');
+            document.getElementById('scanResult').classList.add('hidden');
+            document.getElementById('scanProgress').classList.remove('hidden');
+            document.getElementById('scanError').classList.add('hidden');
+            const pageNo = scanPages.length + 1;
+            const setStatus = (txt, pct) => {
+                document.getElementById('scanStatusText').innerText = `Page ${pageNo}: ` + txt;
+                document.getElementById('scanBar').style.width = Math.min(100, pct) + '%';
+                document.getElementById('scanPct').innerText = Math.min(100, Math.round(pct)) + '%';
+            };
+            setStatus('Photo کھل رہی ہے...', 2);
+
+            let loaded = null;
+            try {
+                loaded = await loadImageFile(file);
+                const blob = await compressImage(loaded.img);
+                const page = { blob, url: URL.createObjectURL(blob) };
+                scanPages.push(page);
+                renderScanPageThumbs();
+                showScanPage(scanPages.length - 1);
+
+                const res = await readInvoiceImage(loaded.img, setStatus);
+                const newRows = buildScanRows(res);
+
+                // same page scanned twice?
+                const sig = r => `${r.code}|${r.qty}|${Math.round(r.gross)}`;
+                const oldSigs = new Set(scanRows.map(sig));
+                if (append && newRows.length && newRows.every(r => oldSigs.has(sig(r)))) {
+                    scanPages.pop(); URL.revokeObjectURL(page.url);
+                    renderScanPageThumbs(); showScanPage(scanPages.length - 1);
+                    showScanError('یہ صفحہ پہلے ہی اسکین ہو چکا ہے — اس کے پروڈکٹس دوبارہ شامل نہیں کیے گئے۔');
+                } else {
+                    scanRows = append ? scanRows.concat(newRows) : newRows;
+
+                    const inv = pickInvoiceNo(res.invCands);
+                    const curInv = document.getElementById('scanInvNo').value.trim();
+                    if (!append || !curInv) document.getElementById('scanInvNo').value = inv;
+                    else if (inv && lev(digitsOf(inv), digitsOf(curInv)) > 2)
+                        showScanError(`Page ${pageNo} پر انوائس نمبر (${inv}) پہلے صفحے (${curInv}) سے مختلف لگ رہا ہے — کہیں کسی اور انوائس کا صفحہ تو نہیں؟ تصویر چیک کریں۔`);
+
+                    if (!append || !document.getElementById('scanDate').value) {
+                        const dt = pickDate(res.dateCands);
+                        document.getElementById('scanDate').value = dt.iso;
+                        document.getElementById('scanDateNote').innerHTML = dt.sure ? '' : '<i class="fa-solid fa-triangle-exclamation"></i> تاریخ صاف نہیں پڑھی گئی — اوپر تصویر سے ملا کر درست کریں';
+                    }
+                    if (!append || res.headerImg) {
+                        if (!append) document.getElementById('scanHeaderImg').src = res.headerImg || page.url;
+                    }
+
+                    let cands = [];
+                    try { cands = JSON.parse(document.getElementById('scanTotalCands').value || '[]'); } catch (x) { }
+                    cands = cands.concat(res.totalCands);
+                    document.getElementById('scanTotalCands').value = JSON.stringify(cands);
+                    // the grand total is normally on the LAST page
+                    if (res.totalCands.length) {
+                        const net0 = r2(scanRows.reduce((s, r) => s + (r.gross || 0) - (r.disc || 0) + (r.tax || 0), 0));
+                        const best = res.totalCands.slice().sort((a, b) => lev(centsStr(a), centsStr(net0)) - lev(centsStr(b), centsStr(net0)))[0];
+                        document.getElementById('scanPhotoTotal').value = best.toFixed(2);
+                    }
+
+                    if (!newRows.length) {
+                        if (!scanRows.length) scanRows.push(blankScanRow(['کوئی پروڈکٹ نہیں پڑھا جا سکا']));
+                        showScanError(`Page ${pageNo} سے پروڈکٹس نہیں پڑھے جا سکے۔ صاف، سیدھی تصویر دوبارہ لیں، یا نیچے خود درج کر لیں۔`);
+                    }
+                }
+                renderScanRows();
+            } catch (err) {
+                console.error(err);
+                showScanError('تصویر نہیں پڑھی جا سکی: ' + (err && err.message ? err.message : err));
+                if (!scanRows.length) scanRows = [blankScanRow([])];
+                if (!document.getElementById('scanDate').value) document.getElementById('scanDate').value = new Date().toISOString().split('T')[0];
+                renderScanRows();
+            } finally {
+                if (loaded) URL.revokeObjectURL(loaded.url);
+                document.getElementById('scanProgress').classList.add('hidden');
+                document.getElementById('scanResult').classList.remove('hidden');
+                ocrBusy = false;
+                ocrProgressCb = null;
+            }
+        }
+
+        function blankScanRow(notes) {
+            return { code: '', name: '', rate: 0, qty: 0, gross: 0, disc: 0, tax: 0, status: 'check', notes: notes || [], fromCatalog: false };
+        }
+
+        function resetScanState() {
+            scanPages.forEach(p => URL.revokeObjectURL(p.url));
+            scanPages = [];
+            scanRows = [];
+            ['scanInvNo', 'scanDate', 'scanPhotoTotal'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('scanTotalCands').value = '[]';
+            document.getElementById('scanDateNote').innerHTML = '';
+            document.getElementById('scanDupNote').innerHTML = '';
+            document.getElementById('scanHeaderImg').removeAttribute('src');
+            document.getElementById('scanPhoto').removeAttribute('src');
+            document.getElementById('scanPageThumbs').innerHTML = '';
+        }
+
+        /* ================= INVOICE PHOTO STORAGE (IndexedDB) ================= */
+        let photoDbPromise = null;
+        let photoCounts = {};   // invoiceNo(lower) -> count
+
+        function photoDb() {
+            if (!photoDbPromise) photoDbPromise = new Promise((res, rej) => {
+                if (!window.indexedDB) return rej(new Error('یہ براؤزر تصاویر محفوظ نہیں کر سکتا'));
+                const r = indexedDB.open('aq_invoice_photos', 1);
+                r.onupgradeneeded = () => {
+                    const st = r.result.createObjectStore('photos', { keyPath: 'id', autoIncrement: true });
+                    st.createIndex('inv', 'invKey');
+                };
+                r.onsuccess = () => res(r.result);
+                r.onerror = () => rej(r.error);
+            });
+            return photoDbPromise;
+        }
+        const invKeyOf = inv => String(inv || '').trim().toLowerCase();
+        function idbReq(req) { return new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); }); }
+        async function photoStore(mode) { const db = await photoDb(); return db.transaction('photos', mode).objectStore('photos'); }
+
+        async function getPhotosFor(invNo) {
+            const st = await photoStore('readonly');
+            const list = await idbReq(st.index('inv').getAll(invKeyOf(invNo)));
+            return list.sort((a, b) => (a.page - b.page) || (a.id - b.id));
+        }
+        async function addPhotosFor(invNo, blobs) {
+            if (!blobs.length) return;
+            const existing = await getPhotosFor(invNo);
+            let page = existing.reduce((m, p) => Math.max(m, p.page || 0), 0);
+            const st = await photoStore('readwrite');
+            for (const blob of blobs) await idbReq(st.add({ invKey: invKeyOf(invNo), invoiceNo: invNo, page: ++page, blob, addedAt: Date.now() }));
+            try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
+        }
+        async function deletePhotoById(id) { const st = await photoStore('readwrite'); await idbReq(st.delete(id)); }
+        async function deletePhotosFor(invNo) {
+            const list = await getPhotosFor(invNo);
+            if (!list.length) return;
+            const st = await photoStore('readwrite');
+            for (const p of list) await idbReq(st.delete(p.id));
+        }
+        async function renamePhotos(oldInv, newInv) {
+            if (invKeyOf(oldInv) === invKeyOf(newInv) && oldInv === newInv) return;
+            const list = await getPhotosFor(oldInv);
+            if (!list.length) return;
+            const target = await getPhotosFor(newInv);
+            let page = invKeyOf(oldInv) === invKeyOf(newInv) ? 0 : target.reduce((m, p) => Math.max(m, p.page || 0), 0);
+            const st = await photoStore('readwrite');
+            for (const p of list) { p.invKey = invKeyOf(newInv); p.invoiceNo = newInv; p.page = ++page; await idbReq(st.put(p)); }
+        }
+        async function refreshPhotoCounts() {
+            try {
+                const st = await photoStore('readonly');
+                const counts = {};
+                await new Promise((res, rej) => {
+                    const req = st.index('inv').openKeyCursor();
+                    req.onsuccess = () => { const c = req.result; if (c) { counts[c.key] = (counts[c.key] || 0) + 1; c.continue(); } else res(); };
+                    req.onerror = () => rej(req.error);
+                });
+                photoCounts = counts;
+            } catch (e) { photoCounts = {}; }
+        }
+        const blobToDataUrl = blob => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => rej(fr.error); fr.readAsDataURL(blob); });
+        async function dataUrlToBlob(u) { const r = await fetch(u); return await r.blob(); }
+
+        /* ---------- Photos viewer ---------- */
+        let photoViewInv = null;
+        async function openPhotosModal(invNo) {
+            photoViewInv = invNo;
+            const isAuditor = currentUser && currentUser.role === 'auditor';
+            document.getElementById('photoModalTitle').innerText = `Invoice ${invNo} — Photos`;
+            document.getElementById('photoAddBtn').style.display = isAuditor ? 'none' : '';
+            document.getElementById('photosModal').classList.remove('hidden');
+            await renderPhotosModal();
+        }
+        async function renderPhotosModal() {
+            const grid = document.getElementById('photoGrid');
+            const isAuditor = currentUser && currentUser.role === 'auditor';
+            grid.querySelectorAll('img').forEach(i => { if (i.dataset.url) URL.revokeObjectURL(i.dataset.url); });
+            let list = [];
+            try { list = await getPhotosFor(photoViewInv); } catch (e) { grid.innerHTML = `<p style="color:#ff9aa2;">${escHtml(e.message)}</p>`; return; }
+            document.getElementById('photoCountLbl').innerText = `${list.length} photo${list.length === 1 ? '' : 's'}`;
+            if (!list.length) {
+                grid.innerHTML = `<p class="col-span-full text-center py-8" style="color:#8fb3c9;">اس انوائس کی کوئی تصویر محفوظ نہیں ہے۔${isAuditor ? '' : ' "Add Photo" سے شامل کریں۔'}</p>`;
+                return;
+            }
+            grid.innerHTML = list.map(p => {
+                const u = URL.createObjectURL(p.blob);
+                return `<div class="photo-card">
+                    <a href="${u}" target="_blank" rel="noopener"><img src="${u}" data-url="${u}" alt="Page ${p.page}"></a>
+                    <div class="flex justify-between items-center mt-1 text-xs">
+                        <span>Page ${p.page}</span>
+                        ${isAuditor ? '' : `<button type="button" onclick="removeInvoicePhoto(${p.id})" class="scan-del" title="Delete photo"><i class="fa-solid fa-trash"></i></button>`}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        function closePhotosModal() {
+            document.querySelectorAll('#photoGrid img').forEach(i => { if (i.dataset.url) URL.revokeObjectURL(i.dataset.url); });
+            document.getElementById('photosModal').classList.add('hidden');
+            photoViewInv = null;
+        }
+        async function removeInvoicePhoto(id) {
+            if (!confirm("کیا یہ تصویر ڈیلیٹ کر دیں؟")) return;
+            await deletePhotoById(id);
+            await refreshPhotoCounts();
+            await renderPhotosModal();
+            renderHistory();
+        }
+        async function addPhotosManually(e) {
+            const files = Array.from(e.target.files || []).filter(f => /^image\//.test(f.type));
+            e.target.value = '';
+            if (!files.length || !photoViewInv) return;
+            const blobs = [];
+            for (const f of files) {
+                const { img, url } = await loadImageFile(f);
+                blobs.push(await compressImage(img));
+                URL.revokeObjectURL(url);
+            }
+            try { await addPhotosFor(photoViewInv, blobs); } catch (err) { alert('تصویر محفوظ نہیں ہو سکی: ' + err.message); }
+            await refreshPhotoCounts();
+            await renderPhotosModal();
+            renderHistory();
+        }
+
+        /* ---------- Print photos ---------- */
+        async function printPhotoSets(sets, title) {
+            const win = window.open('', '_blank');
+            if (!win) { alert("Pop-up بلاک ہے — براؤزر میں اس سائٹ کے لیے pop-ups کی اجازت دیں۔"); return; }
+            win.document.write('<p style="font-family:sans-serif;padding:20px">Photos تیار ہو رہی ہیں...</p>');
+            const pages = [];
+            for (const s of sets) for (const p of s.photos) pages.push({ inv: s.invoiceNo, date: s.date, page: p.page, total: s.photos.length, src: await blobToDataUrl(p.blob) });
+            const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escHtml(title)}</title>
+                <style>
+                    @page { size: A4 portrait; margin: 8mm; }
+                    body { margin: 0; font-family: Arial, sans-serif; }
+                    .pg { page-break-after: always; break-after: page; height: 279mm; display: flex; flex-direction: column; }
+                    .pg:last-child { page-break-after: auto; break-after: auto; }
+                    .cap { font-size: 11pt; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 6px; display: flex; justify-content: space-between; }
+                    .im { flex: 1; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
+                    .im img { max-width: 100%; max-height: 100%; object-fit: contain; }
+                    @media screen { body { background: #888; } .pg { background: #fff; width: 194mm; margin: 10px auto; padding: 8mm; box-shadow: 0 0 8px #0006; } }
+                </style></head><body>
+                ${pages.map(p => `<div class="pg"><div class="cap"><span>AL QADIR TRADERS — Invoice ${escHtml(p.inv)}</span><span>${escHtml(p.date || '')} — Page ${p.page}/${p.total}</span></div><div class="im"><img src="${p.src}"></div></div>`).join('')}
+                </body></html>`;
+            win.document.open(); win.document.write(html); win.document.close();
+            const imgs = Array.from(win.document.images);
+            await Promise.all(imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })));
+            win.focus();
+            win.print();
+        }
+        async function printCurrentInvoicePhotos() {
+            if (!photoViewInv) return;
+            const photos = await getPhotosFor(photoViewInv);
+            if (!photos.length) { alert("پرنٹ کے لیے کوئی تصویر نہیں ہے۔"); return; }
+            const ex = findExistingInvoice(photoViewInv);
+            await printPhotoSets([{ invoiceNo: photoViewInv, date: ex ? ex.date : '', photos }], `Invoice ${photoViewInv} Photos`);
+        }
+        async function printFilteredPhotos() {
+            const invs = ledgerGroupInv.slice();
+            if (!invs.length) { alert("اس فلٹر میں کوئی انوائس نہیں۔"); return; }
+            const sets = [];
+            const seen = new Set();
+            for (const inv of invs) {
+                if (seen.has(invKeyOf(inv))) continue; seen.add(invKeyOf(inv));
+                const photos = await getPhotosFor(inv);
+                if (photos.length) { const ex = findExistingInvoice(inv); sets.push({ invoiceNo: inv, date: ex ? ex.date : '', photos }); }
+            }
+            if (!sets.length) { alert("منتخب مہینوں کی کسی انوائس کی تصویر محفوظ نہیں ہے۔"); return; }
+            // ledgerGroupInv is already in the ledger's date order
+            const n = sets.reduce((s, x) => s + x.photos.length, 0);
+            if (!confirm(`${sets.length} انوائسز کی ${n} تصاویر پرنٹ ہوں گی۔ جاری رکھیں؟`)) return;
+            await printPhotoSets(sets, `Invoice Photos — ${document.getElementById('printPeriodText').innerText}`);
+        }
+
+        function showScanError(msg) {
+            const el = document.getElementById('scanError');
+            el.innerHTML = '<i class="fa-solid fa-circle-exclamation mr-1"></i> ' + escHtml(msg);
+            el.classList.remove('hidden');
+        }
+
+        function checkScanDuplicate() {
+            const box = document.getElementById('scanDupNote');
+            if (!box) return;
+            const invNo = document.getElementById('scanInvNo').value.trim();
+            const ex = findExistingInvoice(invNo);
+            if (ex) {
+                box.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> یہ انوائس پہلے سے محفوظ ہے (${escHtml(ex.date)} — ${ex.count} پروڈکٹس — ${fmt2(ex.net)})`;
+                return;
+            }
+            // OCR may misread 1-2 digits: look for a saved invoice with a similar number AND the same total
+            const net = r2(scanRows.reduce((s, r) => s + (r.gross || 0) - (r.disc || 0) + (r.tax || 0), 0));
+            const groups = {};
+            invoices.forEach(i => { const k = String(i.invoiceNo); (groups[k] = groups[k] || { date: i.date, net: 0, count: 0 }); groups[k].net += i.net || 0; groups[k].count++; });
+            const d = digitsOf(invNo);
+            const hit = Object.entries(groups).find(([k, g]) => net > 0 && Math.abs(g.net - net) < 1 && (!d || lev(digitsOf(k), d) <= 3));
+            box.innerHTML = hit ? `<i class="fa-solid fa-triangle-exclamation"></i> ملتی جلتی انوائس <b>${escHtml(hit[0])}</b> اسی رقم (${fmt2(hit[1].net)}) کے ساتھ پہلے سے محفوظ ہے — کہیں دوبارہ تو نہیں ڈال رہے؟` : '';
+        }
+
+        const STATUS_BADGE = {
+            ok: '<span class="scan-badge ok" title="حساب درست ہے"><i class="fa-solid fa-check"></i></span>',
+            fixed: '<span class="scan-badge fixed"><i class="fa-solid fa-wand-magic-sparkles"></i></span>',
+            check: '<span class="scan-badge check"><i class="fa-solid fa-triangle-exclamation"></i></span>'
+        };
+
+        function renderScanRows() {
+            const body = document.getElementById('scanItemsBody');
+            body.innerHTML = scanRows.map((r, i) => {
+                const tip = escHtml((r.notes || []).join(' | ') || (r.status === 'ok' ? 'حساب درست ہے' : ''));
+                return `<tr class="scan-row-${r.status}" id="scanRow${i}">
+                    <td class="p-1 text-center" id="scanBadge${i}" title="${tip}">${STATUS_BADGE[r.status] || ''}</td>
+                    <td class="p-1"><input class="scan-in" style="width:66px" value="${escHtml(r.code)}" oninput="updateScanRow(${i},'code',this.value)" placeholder="Code"></td>
+                    <td class="p-1"><input class="scan-in" style="min-width:160px" list="productNameList" value="${escHtml(r.name)}" oninput="updateScanRow(${i},'name',this.value)" placeholder="Product name">
+                        ${r.fromCatalog ? '<div class="text-[10px]" style="color:#5dffa6;">✓ محفوظ لسٹ سے</div>' : ''}</td>
+                    <td class="p-1"><input class="scan-in text-right" style="width:78px" type="number" step="0.01" value="${r.rate}" oninput="updateScanRow(${i},'rate',this.value)"></td>
+                    <td class="p-1"><input class="scan-in text-right" style="width:54px" type="number" step="any" value="${r.qty}" oninput="updateScanRow(${i},'qty',this.value)"></td>
+                    <td class="p-1"><input class="scan-in text-right" style="width:98px" type="number" step="0.01" value="${r.gross}" oninput="updateScanRow(${i},'gross',this.value)"></td>
+                    <td class="p-1"><input class="scan-in text-right" style="width:86px" type="number" step="0.01" value="${r.disc}" oninput="updateScanRow(${i},'disc',this.value)"></td>
+                    <td class="p-1"><input class="scan-in text-right" style="width:68px" type="number" step="0.01" value="${r.tax}" oninput="updateScanRow(${i},'tax',this.value)"></td>
+                    <td class="p-1 text-right font-bold scan-net" id="scanNet${i}">${fmt2(r.gross - r.disc + r.tax)}</td>
+                    <td class="p-1 text-center"><button type="button" onclick="removeScanRow(${i})" class="scan-del" title="Remove"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+                ${(r.notes && r.notes.length) ? `<tr class="scan-note-row" id="scanNoteRow${i}"><td></td><td colspan="9" class="px-1 pb-1 text-[10px]" style="color:${r.status === 'check' ? '#ffc067' : '#8fd3ff'}">${r.status === 'fixed' ? 'خودکار درستگی: ' : ''}${tip}</td></tr>` : ''}`;
+            }).join('');
+            updateScanTotals();
+        }
+
+        function updateScanRow(i, field, val) {
+            const r = scanRows[i]; if (!r) return;
+            r[field] = (field === 'code' || field === 'name') ? val : (parseFloat(val) || 0);
+            if (field !== 'code' && field !== 'name') {
+                const net = document.getElementById('scanNet' + i);
+                if (net) net.innerText = fmt2(r.gross - r.disc + r.tax);
+                // re-check the row after a manual edit
+                const good = r.rate > 0 && r.qty > 0 && Math.abs(r.rate * r.qty - r.gross) < 0.011 + r.qty * 0.0001;
+                r.status = good ? 'ok' : 'check';
+                r.notes = good ? [] : ['Rate × Qty اور Value آپس میں نہیں مل رہے'];
+                const b = document.getElementById('scanBadge' + i);
+                if (b) { b.innerHTML = STATUS_BADGE[r.status]; b.title = r.notes.join(' | ') || 'حساب درست ہے'; }
+                const row = document.getElementById('scanRow' + i);
+                if (row) row.className = 'scan-row-' + r.status;
+                const nr = document.getElementById('scanNoteRow' + i);
+                if (nr) nr.style.display = good ? 'none' : '';
+            }
+            updateScanTotals();
+        }
+
+        function addScanRow() {
+            scanRows.push({ code: '', name: '', rate: 0, qty: 0, gross: 0, disc: 0, tax: 0, status: 'check', notes: [], fromCatalog: false });
+            renderScanRows();
+        }
+        function removeScanRow(i) {
+            if (!confirm(`کیا یہ لائن ہٹا دیں؟ ${scanRows[i] && scanRows[i].name ? '(' + scanRows[i].name + ')' : ''}`)) return;
+            scanRows.splice(i, 1);
+            renderScanRows();
+        }
+
+        function updateScanTotals() {
+            let q = 0, g = 0, d = 0, t = 0;
+            scanRows.forEach(r => { q += r.qty || 0; g += r.gross || 0; d += r.disc || 0; t += r.tax || 0; });
+            const net = r2(g - d + t);
+            document.getElementById('scanTotQty').innerText = q.toLocaleString();
+            document.getElementById('scanTotGross').innerText = fmt2(g);
+            document.getElementById('scanTotDisc').innerText = fmt2(d);
+            document.getElementById('scanTotTax').innerText = fmt2(t);
+            document.getElementById('scanTotNet').innerText = fmt2(net);
+            document.getElementById('scanCount').innerText = `${scanRows.length} پروڈکٹس`;
+
+            const pt = parseFloat(document.getElementById('scanPhotoTotal').value);
+            let cands = [];
+            try { cands = JSON.parse(document.getElementById('scanTotalCands').value || '[]'); } catch (e) { }
+            const banner = document.getElementById('scanTotalBanner');
+            const judge = v => {
+                if ((!isNaN(pt) && Math.abs(pt - v) < 0.05) || cands.some(c => Math.abs(c - v) < 0.05)) return 'exact';
+                if ((!isNaN(pt) && lev(centsStr(pt), centsStr(v)) <= 1) || cands.some(c => lev(centsStr(c), centsStr(v)) <= 1)) return 'near';
+                return null;
+            };
+            // later page of an invoice whose earlier page(s) are already saved
+            const prevSaved = findExistingInvoice(document.getElementById('scanInvNo').value);
+            const combined = prevSaved ? r2(prevSaved.net + net) : 0;
+            let state, jn = judge(net), jc = prevSaved ? judge(combined) : null;
+            if (jn === 'exact') state = 'match';
+            else if (jc === 'exact') state = 'matchCombined';
+            else if (jn === 'near') state = 'near';
+            else if (jc === 'near') state = 'matchCombined';
+            else state = (isNaN(pt) && !cands.length) ? 'unknown' : 'diff';
+
+            const counts = { ok: 0, fixed: 0, check: 0 };
+            scanRows.forEach(r => counts[r.status] = (counts[r.status] || 0) + 1);
+            const rowsMsg = `<span style="color:#5dffa6">✓ ${counts.ok} درست</span> &nbsp; <span style="color:#8fd3ff">✦ ${counts.fixed} خودکار درست</span> &nbsp; <span style="color:#ffc067">⚠ ${counts.check} چیک کریں</span>`;
+            const msgs = {
+                match: `<div class="scan-banner ok"><i class="fa-solid fa-circle-check"></i> سسٹم کا ٹوٹل انوائس کے TOTAL AMOUNT (${fmt2(net)}) سے مل گیا ✓</div>`,
+                near: `<div class="scan-banner ok"><i class="fa-solid fa-circle-check"></i> سسٹم کا ٹوٹل ${fmt2(net)} — تصویر کا ٹوٹل تقریباً یہی پڑھا گیا ✓ (ایک بار نظر ڈال لیں)</div>`,
+                diff: `<div class="scan-banner bad"><i class="fa-solid fa-triangle-exclamation"></i> ٹوٹل نہیں ملا! سسٹم: ${fmt2(net)} — انوائس: ${isNaN(pt) ? '?' : fmt2(pt)} — فرق: ${isNaN(pt) ? '?' : fmt2(net - pt)}۔ نارنجی لائنیں چیک کریں۔</div>`,
+                matchCombined: `<div class="scan-banner ok"><i class="fa-solid fa-circle-check"></i> پہلے سے محفوظ صفحات (${fmt2(prevSaved ? prevSaved.net : 0)}) + یہ صفحہ (${fmt2(net)}) = ${fmt2(combined)} — انوائس کے TOTAL AMOUNT سے ${jc === 'near' ? 'تقریباً ' : ''}مل گیا ✓ (Save کرنے پر اسی انوائس میں جڑ جائے گا)</div>`,
+                unknown: `<div class="scan-banner warn"><i class="fa-solid fa-circle-info"></i> اس صفحے پر TOTAL AMOUNT نہیں ملا۔ اگر انوائس کا اگلا صفحہ ہے تو <b>"اگلا صفحہ"</b> بٹن سے وہ بھی اسکین کریں، ورنہ انوائس کا ٹوٹل اوپر خانے میں لکھ دیں۔</div>`
+            };
+            banner.innerHTML = msgs[state] + `<div class="mt-1 text-[11px]">${rowsMsg}</div>`;
+            banner.dataset.state = state;
+            checkScanDuplicate();
+        }
+
+        function showScanSuccess(info) {
+            const box = document.getElementById('scanSuccess');
+            document.getElementById('scanSuccessBody').innerHTML = `
+                <div class="text-2xl font-black tracking-wide" style="color:#ffe27a; font-family:'Orbitron',sans-serif;">${escHtml(info.inv)}</div>
+                <div class="grid grid-cols-2 gap-2 mt-3 text-sm text-left">
+                    <div class="ss-cell"><span>تاریخ</span><b>${escHtml(info.date)}</b></div>
+                    <div class="ss-cell"><span>پروڈکٹس</span><b>${info.count}</b></div>
+                    <div class="ss-cell"><span>رقم (Net)</span><b>${fmt2(info.net)}</b></div>
+                    <div class="ss-cell"><span>تصاویر</span><b>${info.pages} صفحہ</b></div>
+                </div>
+                ${info.merged ? '<div class="mt-2 text-xs" style="color:#8fd3ff;">یہ پروڈکٹس پہلے سے موجود اسی انوائس میں شامل کر دیے گئے۔</div>' : ''}`;
+            box.dataset.inv = info.inv;
+            box.classList.remove('hidden');
+            box.classList.add('flex');
+        }
+        function closeScanSuccess() {
+            const box = document.getElementById('scanSuccess');
+            box.classList.add('hidden'); box.classList.remove('flex');
+        }
+        function scanSuccessNext() {
+            closeScanSuccess();
+            startInvoiceScan();
+        }
+        function scanSuccessView() {
+            const inv = document.getElementById('scanSuccess').dataset.inv;
+            closeScanSuccess();
+            highlightInvoiceRow(inv);
+        }
+        function highlightInvoiceRow(inv) {
+            const q = document.getElementById('searchQuery');
+            if (q.value) { q.value = ''; renderHistory(); }
+            const row = document.querySelector(`#historyTableBody tr[data-invkey="${CSS.escape(invKeyOf(inv))}"]`);
+            if (!row) return;
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.classList.remove('row-flash'); void row.offsetWidth; row.classList.add('row-flash');
+        }
+
+        function closeScanModal(force) {
+            if (!force && scanRows.length && !confirm("اسکین کی گئی انوائس محفوظ نہیں ہوئی۔ کیا بند کر دیں؟")) return;
+            document.getElementById('scanModal').classList.add('hidden');
+            resetScanState();
+        }
+
+        function toggleScanZoom() {
+            document.getElementById('scanPhotoWrap').classList.toggle('zoomed');
+        }
+
+        let approveBusy = false;
+        function approveScan() {
+            if (currentUser && currentUser.role === 'auditor') return;
+            if (approveBusy) return;
+            approveBusy = true;
+            const btn = document.getElementById('btnApproveScan');
+            if (btn) btn.disabled = true;
+            try { approveScanInner(); }
+            finally { approveBusy = false; if (btn) btn.disabled = false; }
+        }
+
+        function approveScanInner() {
+            document.getElementById('scanError').classList.add('hidden');
+            const invNo = document.getElementById('scanInvNo').value.trim();
+            const date = document.getElementById('scanDate').value;
+            if (!invNo) { alert("انوائس نمبر درج کریں۔"); document.getElementById('scanInvNo').focus(); return; }
+            if (!date) { alert("تاریخ درج کریں۔"); return; }
+            const rows = scanRows.filter(r => (r.name || '').trim() || r.gross);
+            if (!rows.length) { alert("کم از کم ایک پروڈکٹ ہونا ضروری ہے۔"); return; }
+            if (rows.some(r => !(r.name || '').trim())) { alert("ہر لائن میں پروڈکٹ کا نام لکھیں۔"); return; }
+
+            const checks = rows.filter(r => r.status === 'check').length;
+            const state = document.getElementById('scanTotalBanner').dataset.state;
+            if (state === 'diff' || state === 'unknown' || checks) {
+                const why = (state === 'diff' ? 'ٹوٹل انوائس سے نہیں مل رہا۔\n' : state === 'unknown' ? 'انوائس کا ٹوٹل چیک نہیں ہو سکا۔\n' : '') + (checks ? `${checks} لائنیں ابھی "چیک کریں" پر ہیں۔\n` : '');
+                if (!confirm(why + '\nکیا آپ نے سب دیکھ لیا ہے اور پھر بھی محفوظ کرنا چاہتے ہیں؟')) return;
+            }
+
+            const dupTxt = document.getElementById('scanDupNote').innerText.trim();
+            if (dupTxt && !findExistingInvoice(invNo) && !confirm(dupTxt + '\n\nکیا پھر بھی نئی انوائس کے طور پر محفوظ کریں؟')) return;
+
+            if (pendingItems.length && !confirm(`New Invoice Entry میں ${pendingItems.length} پروڈکٹس پہلے سے پڑے ہیں (محفوظ نہیں ہوئے)۔ وہ ہٹا کر یہ اسکین والی انوائس محفوظ کریں؟`)) return;
+
+            const pendingWasMerge = !!findExistingInvoice(invNo);
+            const prevPending = pendingItems, prevInv = document.getElementById('newEntryInvNo').value, prevDate = document.getElementById('newEntryDate').value;
+            pendingItems = rows.map(r => ({ productCode: (r.code || '').trim(), productName: r.name.trim(), qty: r.qty, gross: r.gross, discAmt: r.disc, taxAmt: r.tax, net: r.gross - r.disc + r.tax }));
+            document.getElementById('newEntryInvNo').value = invNo;
+            document.getElementById('newEntryDate').value = date;
+            resetProductLine();
+
+            let savedInv = null;
+            try { savedInv = saveAllInvoice({ silent: true }); }
+            catch (err) { console.error(err); alert('محفوظ کرتے وقت مسئلہ آیا: ' + (err && err.message ? err.message : err)); }
+
+            if (savedInv) {
+                const info = {
+                    inv: savedInv,
+                    date: (findExistingInvoice(savedInv) || {}).date || date,
+                    count: rows.length,
+                    net: rows.reduce((s, r) => s + (r.gross || 0) - (r.disc || 0) + (r.tax || 0), 0),
+                    pages: scanPages.length,
+                    merged: pendingWasMerge
+                };
+                const blobs = scanPages.map(p => p.blob);
+                try {
+                    rows.forEach(r => {
+                        const code = (r.code || '').trim();
+                        if (code && r.name.trim()) productCatalog[code] = { name: r.name.trim(), rate: r.rate };
+                    });
+                    saveCatalog();
+                    document.getElementById('newEntryDate').value = prevDate;
+                } catch (e) { console.error(e); }
+                closeScanModal(true);          // always leave the preview once saved
+                showScanSuccess(info);
+                addPhotosFor(savedInv, blobs)
+                    .then(() => refreshPhotoCounts()).then(() => renderHistory())
+                    .catch(err => alert('انوائس محفوظ ہو گئی، لیکن تصویر محفوظ نہیں ہو سکی: ' + (err && err.message ? err.message : err)));
+            } else {
+                pendingItems = prevPending;
+                document.getElementById('newEntryInvNo').value = prevInv;
+                document.getElementById('newEntryDate').value = prevDate;
+                renderPendingItems();
+                checkDuplicateInvoiceLive();
+                showScanError('انوائس ابھی محفوظ نہیں ہوئی (آپ نے Cancel دبایا)۔ نمبر / رقم درست کر کے دوبارہ "Approve & Save" دبائیں، یا Cancel سے بند کر دیں۔');
+                document.getElementById('scanModal').scrollTop = 0;
+            }
+        }
+
+        /* ================= INSTALL AS APP (PWA) ================= */
+        let deferredInstall = null;
+        const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        function showInstallButtons(on) {
+            document.querySelectorAll('.install-app-btn').forEach(b => b.classList.toggle('show', !!on && !isStandalone()));
+        }
+        window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; showInstallButtons(true); });
+        window.addEventListener('appinstalled', () => { deferredInstall = null; showInstallButtons(false); });
+        async function installApp() {
+            if (deferredInstall) {
+                deferredInstall.prompt();
+                try { await deferredInstall.userChoice; } catch (e) { }
+                deferredInstall = null;
+                showInstallButtons(false);
+                return;
+            }
+            if (isIOS()) {
+                alert("iPhone / iPad پر انسٹال کرنے کے لیے:\n\n1. Safari میں یہ صفحہ کھولیں\n2. نیچے Share بٹن (⬆️) دبائیں\n3. \"Add to Home Screen\" منتخب کریں");
+                return;
+            }
+            alert("Chrome میں انسٹال کرنے کے لیے:\n\nموبائل: اوپر ⋮ مینو → \"Install app\" یا \"Add to Home screen\"\nکمپیوٹر: ایڈریس بار کے دائیں طرف انسٹال آئیکن (🖥️⬇) یا ⋮ مینو → \"Install Al Qadir\"");
+        }
+        if (isIOS() && !isStandalone()) document.addEventListener('DOMContentLoaded', () => showInstallButtons(true));
+        if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW:', err)); });
+        }
+
+        window.addEventListener('beforeunload', function (e) {
+            if (pendingItems.length > 0) { e.preventDefault(); e.returnValue = ''; }
+        });
 
         /* USER MANAGEMENT MODAL LOGIC */
         function openUserMgmtModal() {
@@ -1221,6 +2702,7 @@
         }
 
         function closeUserMgmtModal() {
+            cancelUserEdit();
             document.getElementById('userMgmtModal').classList.add('hidden');
         }
 
@@ -1233,12 +2715,40 @@
                         <td class="p-2 border font-bold">${u.name}</td>
                         <td class="p-2 border">${u.username}</td>
                         <td class="p-2 border font-semibold text-red-600">${u.role.toUpperCase()}</td>
-                        <td class="p-2 border text-center">
-                            ${systemUsers.length > 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800 font-bold"><i class="fa-solid fa-trash"></i></button>` : '-'}
+                        <td class="p-2 border text-center whitespace-nowrap">
+                            <button onclick="startUserEdit(${u.id})" class="text-blue-600 hover:text-blue-800 font-bold mr-2" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                            ${systemUsers.length > 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800 font-bold" title="Delete"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </td>
                     </tr>
                 `;
             });
+        }
+
+        let editingUserId = null;
+
+        function startUserEdit(userId) {
+            const u = systemUsers.find(x => x.id === userId);
+            if (!u) return;
+            editingUserId = userId;
+            document.getElementById('newFullName').value = u.name;
+            document.getElementById('newUserName').value = u.username;
+            document.getElementById('newUserPass').value = u.pass;
+            document.getElementById('newUserRole').value = u.role;
+            document.getElementById('userFormTitle').innerText = `Edit User / ترمیم: ${u.name}`;
+            document.getElementById('btnUserSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Update User';
+            document.getElementById('btnCancelUserEdit').classList.remove('hidden');
+            document.getElementById('newFullName').focus();
+        }
+
+        function cancelUserEdit() {
+            editingUserId = null;
+            document.getElementById('newFullName').value = '';
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserPass').value = '';
+            document.getElementById('newUserRole').value = 'admin';
+            document.getElementById('userFormTitle').innerText = 'Add New User / نیا صارف شامل کریں';
+            document.getElementById('btnUserSubmit').innerHTML = '<i class="fa-solid fa-user-plus mr-1"></i> Add User';
+            document.getElementById('btnCancelUserEdit').classList.add('hidden');
         }
 
         function handleCreateUser(e) {
@@ -1248,23 +2758,52 @@
             const pass = document.getElementById('newUserPass').value.trim();
             const role = document.getElementById('newUserRole').value;
 
-            if (systemUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-                alert("یہ یوژر نیم پہلے سے موجود ہے!");
+            if (systemUsers.some(u => u.id !== editingUserId && u.username.toLowerCase() === username.toLowerCase())) {
+                alert("یہ یوزر نیم پہلے سے موجود ہے!");
+                return;
+            }
+
+            if (editingUserId !== null) {
+                const u = systemUsers.find(x => x.id === editingUserId);
+                if (!u) { cancelUserEdit(); return; }
+                // At least one admin must always remain
+                if (u.role === 'admin' && role !== 'admin' && systemUsers.filter(x => x.role === 'admin').length <= 1) {
+                    alert("سسٹم میں کم از کم ایک Admin ہونا ضروری ہے۔ اس کا رول تبدیل نہیں ہو سکتا۔");
+                    return;
+                }
+                u.name = name; u.username = username; u.pass = pass; u.role = role;
+                localStorage.setItem('aq_users', JSON.stringify(systemUsers));
+
+                if (currentUser && currentUser.id === u.id) {
+                    currentUser = u;
+                    document.getElementById('activeUserLabel').innerText = `${u.name} (${u.role.toUpperCase()})`;
+                    applyRolePermissions();
+                    renderHistory();
+                }
+                cancelUserEdit();
+                renderUsersList();
+                alert("صارف کی معلومات اپڈیٹ ہو گئی ہیں!");
                 return;
             }
 
             systemUsers.push({ id: Date.now(), name, username, pass, role });
             localStorage.setItem('aq_users', JSON.stringify(systemUsers));
-
-            document.getElementById('newFullName').value = '';
-            document.getElementById('newUserName').value = '';
-            document.getElementById('newUserPass').value = '';
-
+            cancelUserEdit();
             renderUsersList();
             alert("نیا صارف شامل کر دیا گیا ہے!");
         }
 
         function deleteUser(userId) {
+            const target = systemUsers.find(u => u.id === userId);
+            if (target && target.role === 'admin' && systemUsers.filter(u => u.role === 'admin').length <= 1) {
+                alert("آخری Admin کو حذف نہیں کیا جا سکتا۔");
+                return;
+            }
+            if (currentUser && currentUser.id === userId) {
+                alert("آپ اپنا ہی اکاؤنٹ حذف نہیں کر سکتے۔");
+                return;
+            }
+            if (editingUserId === userId) cancelUserEdit();
             if (confirm("کیا آپ اس صارف کو سسٹم سے حذف کرنا چاہتے ہیں؟")) {
                 systemUsers = systemUsers.filter(u => u.id !== userId);
                 localStorage.setItem('aq_users', JSON.stringify(systemUsers));
@@ -1391,11 +2930,37 @@
             if (confirm(`کیا آپ واقعی ${checkedBoxes.length} انوائسز کو ڈیلیٹ کرنا چاہتے ہیں؟`)) {
                 const nosToDelete = Array.from(checkedBoxes).map(cb => cb.value);
                 invoices = invoices.filter(inv => !nosToDelete.includes(inv.invoiceNo));
+                Promise.all(nosToDelete.filter(n => !invoices.some(i => invKeyOf(i.invoiceNo) === invKeyOf(n))).map(n => deletePhotosFor(n)))
+                    .then(refreshPhotoCounts).then(renderHistory).catch(() => {});
                 localStorage.setItem('aq_invoices', JSON.stringify(invoices));
                 document.getElementById('selectAllCheckbox').checked = false;
                 populateFilterDropdowns();
                 renderHistory();
             }
+        }
+
+        let expandedInvoices = new Set();
+        let ledgerGroupKeys = [];
+        let ledgerGroupInv = [];
+
+        function saveSortPref() {
+            try { localStorage.setItem('aq_ledger_sort', document.getElementById('ledgerSortOrder').value); } catch (e) { }
+        }
+
+        // after saving an invoice of another month, make sure the date filter shows it
+        function ensureMonthVisible(dateStr) {
+            const m = String(dateStr || '').substring(0, 7);
+            const st = document.getElementById('filterStartMonth'), en = document.getElementById('filterEndMonth');
+            if (!m || !st.value || !en.value) return;
+            if (m < st.value) st.value = m;
+            if (m > en.value) en.value = m;
+        }
+
+        function toggleInvoiceDetails(idx) {
+            const key = ledgerGroupKeys[idx];
+            if (!key) return;
+            if (expandedInvoices.has(key)) expandedInvoices.delete(key); else expandedInvoices.add(key);
+            renderHistory();
         }
 
         function renderHistory() {
@@ -1418,7 +2983,8 @@
             const filteredRaw = invoices.filter(item => {
                 const itemMonth = item.date ? item.date.substring(0, 7) : '';
                 const matchesMonthRange = (itemMonth >= startMonth && itemMonth <= endMonth);
-                const matchesSearch = item.invoiceNo.toLowerCase().includes(search);
+                const matchesSearch = String(item.invoiceNo).toLowerCase().includes(search) ||
+                    (item.productName && search && item.productName.toLowerCase().includes(search));
                 return matchesMonthRange && matchesSearch;
             });
 
@@ -1426,36 +2992,85 @@
             filteredRaw.forEach(item => {
                 const key = `${item.invoiceNo}_${item.date}`;
                 if (!groupedMap.has(key)) {
-                    groupedMap.set(key, { invoiceNo: item.invoiceNo, date: item.date, qty: 0, gross: 0, disc: 0, tax: 0, net: 0 });
+                    groupedMap.set(key, { key, invoiceNo: item.invoiceNo, date: item.date, qty: 0, gross: 0, disc: 0, tax: 0, net: 0, items: [] });
                 }
                 const g = groupedMap.get(key);
-                g.qty += item.qty; g.gross += item.gross; g.disc += item.discAmt; g.tax += item.taxAmt; g.net += item.net;
+                g.qty += item.qty || 0; g.gross += item.gross || 0; g.disc += item.discAmt || 0; g.tax += item.taxAmt || 0; g.net += item.net || 0;
+                g.items.push(item);
             });
 
             const isAuditor = currentUser && currentUser.role === 'auditor';
+            const colCount = isAuditor ? 8 : 10;
 
+            ledgerGroupKeys = [];
+            ledgerGroupInv = [];
             let index = 1;
             let rowsHtml = '';
-            groupedMap.forEach(group => {
+            const sortDesc = document.getElementById('ledgerSortOrder') && document.getElementById('ledgerSortOrder').value === 'desc';
+            const sortedGroups = Array.from(groupedMap.values()).sort((a, b) => {
+                const c = String(a.date || '').localeCompare(String(b.date || '')) ||
+                          String(a.invoiceNo).localeCompare(String(b.invoiceNo), undefined, { numeric: true });
+                return sortDesc ? -c : c;
+            });
+            sortedGroups.forEach(group => {
                 sumQty += group.qty; sumGross += group.gross; sumDisc += group.disc; sumTax += group.tax; sumNet += group.net;
 
+                const gIdx = ledgerGroupKeys.length;
+                ledgerGroupKeys.push(group.key);
+                ledgerGroupInv.push(group.invoiceNo);
+                const isOpen = expandedInvoices.has(group.key);
+                const n = group.items.length;
+                const pc = photoCounts[invKeyOf(group.invoiceNo)] || 0;
+                const itemsBtn = `<button type="button" onclick="toggleInvoiceDetails(${gIdx})" class="no-print block mx-auto mt-0.5 text-[10px] font-semibold text-blue-600 hover:underline">
+                        <i class="fa-solid fa-chevron-${isOpen ? 'down' : 'right'}"></i> ${n} item${n === 1 ? '' : 's'}</button>` +
+                    (pc ? `<button type="button" onclick="openPhotosModal(ledgerGroupInv[${gIdx}])" class="no-print photo-chip" title="Invoice photos"><i class="fa-solid fa-camera"></i> ${pc}</button>` : '');
+
                 rowsHtml += `
-                    <tr class="hover:bg-gray-50 border-b">
-                        ${!isAuditor ? `<td class="p-2 border text-center no-print action-col"><input type="checkbox" value="${group.invoiceNo}" class="inv-checkbox w-4 h-4 cursor-pointer"></td>` : ''}
+                    <tr class="hover:bg-gray-50 border-b" data-invkey="${escHtml(invKeyOf(group.invoiceNo))}">
+                        ${!isAuditor ? `<td class="p-2 border text-center no-print action-col"><input type="checkbox" value="${escHtml(group.invoiceNo)}" class="inv-checkbox w-4 h-4 cursor-pointer"></td>` : ''}
                         <td class="p-2 border text-center font-bold">${index++}</td>
                         <td class="p-2 border text-center">${group.date}</td>
-                        <td class="p-2 border font-bold text-gray-800 text-center">${group.invoiceNo}</td>
+                        <td class="p-2 border font-bold text-gray-800 text-center">${escHtml(group.invoiceNo)}${itemsBtn}</td>
                         <td class="p-2 border text-right font-semibold text-blue-700">${group.qty}</td>
-                        <td class="p-2 border text-right">${group.gross.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                        <td class="p-2 border text-right text-orange-600">${group.disc.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                        <td class="p-2 border text-right text-red-600">${group.tax.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                        <td class="p-2 border text-right font-bold text-green-700 bg-green-50/50">${group.net.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2 border text-right">${fmt2(group.gross)}</td>
+                        <td class="p-2 border text-right text-orange-600">${fmt2(group.disc)}</td>
+                        <td class="p-2 border text-right text-red-600">${fmt2(group.tax)}</td>
+                        <td class="p-2 border text-right font-bold text-green-700 bg-green-50/50">${fmt2(group.net)}</td>
                         ${!isAuditor ? `<td class="p-2 border no-print text-center action-col">
-                            <button onclick="openEditModal('${group.invoiceNo}')" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteInvoiceGroup('${group.invoiceNo}')" class="text-red-600 hover:text-red-800" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="openPhotosModal(ledgerGroupInv[${gIdx}])" class="text-cyan-500 hover:text-cyan-300 mr-2" title="Photos"><i class="fa-solid fa-camera"></i></button>
+                            <button onclick="openEditModal(ledgerGroupInv[${gIdx}])" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteInvoiceGroup(ledgerGroupInv[${gIdx}])" class="text-red-600 hover:text-red-800" title="Delete"><i class="fa-solid fa-trash"></i></button>
                         </td>` : ''}
                     </tr>
                 `;
+
+                if (isOpen) {
+                    const sub = group.items.map((it, i) => `
+                        <tr>
+                            <td class="p-1 border">${i + 1}. ${escHtml(it.productName || '-')}</td>
+                            <td class="p-1 border text-right">${it.qty || 0}</td>
+                            <td class="p-1 border text-right">${fmt2(it.gross)}</td>
+                            <td class="p-1 border text-right text-orange-600">${fmt2(it.discAmt)}</td>
+                            <td class="p-1 border text-right text-red-600">${fmt2(it.taxAmt)}</td>
+                            <td class="p-1 border text-right font-bold text-green-700">${fmt2(it.net)}</td>
+                        </tr>`).join('');
+                    rowsHtml += `
+                    <tr class="no-print">
+                        <td colspan="${colCount}" class="p-2 border">
+                            <div class="pl-4 border-l-4 border-blue-500">
+                                <div class="font-bold text-blue-600 mb-1">Invoice ${escHtml(group.invoiceNo)} — Products</div>
+                                <table class="w-full border-collapse text-[11px]">
+                                    <thead><tr>
+                                        <th class="p-1 border text-left">Product</th><th class="p-1 border text-right">Qty</th>
+                                        <th class="p-1 border text-right">Value</th><th class="p-1 border text-right">Margin</th>
+                                        <th class="p-1 border text-right">Tax</th><th class="p-1 border text-right">Total</th>
+                                    </tr></thead>
+                                    <tbody>${sub}</tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>`;
+                }
             });
 
             tbody.innerHTML = rowsHtml;
@@ -1468,14 +3083,17 @@
             document.getElementById('dashNet').innerText = sumNet.toLocaleString('en-US', {maximumFractionDigits: 0});
 
             document.getElementById('footQty').innerText = sumQty.toLocaleString();
-            document.getElementById('footGross').innerText = sumGross.toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('footDisc').innerText = sumDisc.toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('footTax').innerText = sumTax.toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('footNet').innerText = sumNet.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('footGross').innerText = fmt2(sumGross);
+            document.getElementById('footDisc').innerText = fmt2(sumDisc);
+            document.getElementById('footTax').innerText = fmt2(sumTax);
+            document.getElementById('footNet').innerText = fmt2(sumNet);
 
             render12MonthSummary();
             applyRolePermissions();
         }
+
+        /* ===== EDIT INVOICE (MULTI-PRODUCT) ===== */
+        let editItems = [];
 
         function openEditModal(invNo) {
             if (currentUser && currentUser.role === 'auditor') {
@@ -1485,29 +3103,70 @@
             const matches = invoices.filter(i => i.invoiceNo === invNo);
             if (matches.length === 0) return;
 
-            let totalQty = 0, totalGross = 0, totalDisc = 0, totalTax = 0, totalNet = 0;
-            matches.forEach(m => {
-                totalQty += (m.qty || 0); totalGross += (m.gross || 0);
-                totalDisc += (m.discAmt || 0); totalTax += (m.taxAmt || 0); totalNet += (m.net || 0);
-            });
+            editItems = matches.map(m => ({
+                productCode: m.productCode || '',
+                productName: m.productName || '',
+                qty: m.qty || 0,
+                gross: m.gross || 0,
+                discAmt: m.discAmt || 0,
+                taxAmt: m.taxAmt || 0
+            }));
 
             document.getElementById('editInvoiceNoOld').value = invNo;
             document.getElementById('editInvoiceNo').value = invNo;
             document.getElementById('editDate').value = matches[0].date || new Date().toISOString().split('T')[0];
-            document.getElementById('editQty').value = totalQty;
-            document.getElementById('editGross').value = totalGross.toFixed(2);
-            document.getElementById('editDisc').value = totalDisc.toFixed(2);
-            document.getElementById('editTax').value = totalTax.toFixed(2);
-            document.getElementById('editNet').value = totalNet.toFixed(2);
-
+            renderEditRows();
             document.getElementById('editInvoiceModal').classList.remove('hidden');
         }
 
-        function calculateEditTotals() {
-            const gross = parseFloat(document.getElementById('editGross').value) || 0;
-            const disc = parseFloat(document.getElementById('editDisc').value) || 0;
-            const tax = parseFloat(document.getElementById('editTax').value) || 0;
-            document.getElementById('editNet').value = (gross - disc + tax).toFixed(2);
+        function renderEditRows() {
+            const body = document.getElementById('editItemsBody');
+            body.innerHTML = editItems.map((it, i) => `
+                <tr>
+                    <td class="p-1 border"><input type="text" list="productNameList" value="${escHtml(it.productName)}" oninput="updateEditItem(${i},'productName',this.value)" class="w-full border rounded p-1.5 font-semibold" placeholder="Product"></td>
+                    <td class="p-1 border"><input type="number" step="any" value="${it.qty}" oninput="updateEditItem(${i},'qty',this.value)" class="w-full border rounded p-1.5 text-right"></td>
+                    <td class="p-1 border"><input type="number" step="0.01" value="${it.gross}" oninput="updateEditItem(${i},'gross',this.value)" class="w-full border rounded p-1.5 text-right"></td>
+                    <td class="p-1 border"><input type="number" step="0.01" value="${it.discAmt}" oninput="updateEditItem(${i},'discAmt',this.value)" class="w-full border rounded p-1.5 text-right"></td>
+                    <td class="p-1 border"><input type="number" step="0.01" value="${it.taxAmt}" oninput="updateEditItem(${i},'taxAmt',this.value)" class="w-full border rounded p-1.5 text-right"></td>
+                    <td class="p-1 border text-right font-bold edit-net-val" id="editRowNet${i}">${fmt2(it.gross - it.discAmt + it.taxAmt)}</td>
+                    <td class="p-1 border text-center"><button type="button" onclick="removeEditRow(${i})" class="text-red-600 hover:text-red-800" title="Remove"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`).join('');
+            updateEditTotals();
+        }
+
+        function updateEditItem(i, field, val) {
+            if (!editItems[i]) return;
+            editItems[i][field] = field === 'productName' ? val : (parseFloat(val) || 0);
+            const it = editItems[i];
+            const cell = document.getElementById('editRowNet' + i);
+            if (cell) cell.innerText = fmt2(it.gross - it.discAmt + it.taxAmt);
+            updateEditTotals();
+        }
+
+        function updateEditTotals() {
+            let q = 0, g = 0, d = 0, t = 0;
+            editItems.forEach(it => { q += it.qty; g += it.gross; d += it.discAmt; t += it.taxAmt; });
+            document.getElementById('editTotQty').innerText = q.toLocaleString();
+            document.getElementById('editTotGross').innerText = fmt2(g);
+            document.getElementById('editTotDisc').innerText = fmt2(d);
+            document.getElementById('editTotTax').innerText = fmt2(t);
+            document.getElementById('editTotNet').innerText = fmt2(g - d + t);
+        }
+
+        function addEditRow() {
+            editItems.push({ productName: '', qty: 0, gross: 0, discAmt: 0, taxAmt: 0 });
+            renderEditRows();
+            const inputs = document.querySelectorAll('#editItemsBody tr:last-child input');
+            if (inputs[0]) inputs[0].focus();
+        }
+
+        function removeEditRow(i) {
+            if (editItems.length <= 1) {
+                alert("کم از کم ایک پروڈکٹ ضروری ہے۔ پوری انوائس ہٹانے کے لیے Delete بٹن استعمال کریں۔");
+                return;
+            }
+            editItems.splice(i, 1);
+            renderEditRows();
         }
 
         function saveEditedInvoice(e) {
@@ -1517,28 +3176,42 @@
             const oldInvNo = document.getElementById('editInvoiceNoOld').value;
             const newInvNo = document.getElementById('editInvoiceNo').value.trim();
             const newDate = document.getElementById('editDate').value;
-            const newQty = parseFloat(document.getElementById('editQty').value) || 0;
-            const newGross = parseFloat(document.getElementById('editGross').value) || 0;
-            const newDisc = parseFloat(document.getElementById('editDisc').value) || 0;
-            const newTax = parseFloat(document.getElementById('editTax').value) || 0;
-            const newNet = parseFloat(document.getElementById('editNet').value) || 0;
+
+            const rows = editItems.filter(it => it.productName.trim() || it.qty || it.gross);
+            if (rows.length === 0) { alert("کم از کم ایک پروڈکٹ درج کریں۔"); return; }
+            if (rows.some(it => !it.productName.trim())) { alert("ہر لائن میں پروڈکٹ کا نام لکھیں۔"); return; }
+
+            let finalInvNo = newInvNo;
+            if (newInvNo.toLowerCase() !== oldInvNo.toLowerCase()) {
+                const other = findExistingInvoice(newInvNo);
+                if (other) {
+                    if (!confirm(`⚠ انوائس نمبر ${other.invoiceNo} پہلے سے موجود ہے (${other.count} پروڈکٹس)۔\nکیا دونوں کو ایک ہی انوائس میں ملا دیں؟`)) return;
+                    finalInvNo = other.invoiceNo;
+                    invoices.forEach(i => { if (i.invoiceNo === other.invoiceNo) i.date = newDate; });
+                }
+            }
 
             invoices = invoices.filter(item => item.invoiceNo !== oldInvNo);
-            invoices.unshift({
-                id: Date.now(),
+            const base = Date.now();
+            const newRows = rows.map((it, i) => ({
+                id: base + i,
                 date: newDate,
-                invoiceNo: newInvNo,
-                productName: "COCA-COLA INVOICE BUNDLE",
-                qty: newQty,
-                rate: newQty > 0 ? (newGross / newQty) : newGross,
-                gross: newGross,
-                discAmt: newDisc,
-                taxAmt: newTax,
-                net: newNet
-            });
+                invoiceNo: finalInvNo,
+                productCode: it.productCode || '',
+                productName: it.productName.trim(),
+                qty: it.qty,
+                rate: it.qty > 0 ? (it.gross / it.qty) : it.gross,
+                gross: it.gross,
+                discAmt: it.discAmt,
+                taxAmt: it.taxAmt,
+                net: it.gross - it.discAmt + it.taxAmt
+            }));
+            invoices.unshift(...newRows);
 
             localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+            if (finalInvNo !== oldInvNo) renamePhotos(oldInvNo, finalInvNo).then(refreshPhotoCounts).then(renderHistory).catch(() => {});
             closeEditModal();
+            updateProductDatalist();
             populateFilterDropdowns();
             renderHistory();
         }
@@ -1548,8 +3221,11 @@
                 alert("Auditor کو ریکارڈ ڈیلیٹ کرنے کی اجازت نہیں ہے۔");
                 return;
             }
-            if (confirm(`کیا آپ انوائس نمبر #${invNo} ڈیلیٹ کرنا چاہتے ہیں؟`)) {
+            const pcount = photoCounts[invKeyOf(invNo)] || 0;
+            if (confirm(`کیا آپ انوائس نمبر #${invNo} ڈیلیٹ کرنا چاہتے ہیں؟` + (pcount ? `\n(اس کی ${pcount} تصاویر بھی ڈیلیٹ ہو جائیں گی)` : ''))) {
                 invoices = invoices.filter(item => item.invoiceNo !== invNo);
+                if (!invoices.some(i => invKeyOf(i.invoiceNo) === invKeyOf(invNo)))
+                    deletePhotosFor(invNo).then(refreshPhotoCounts).then(renderHistory).catch(() => {});
                 localStorage.setItem('aq_invoices', JSON.stringify(invoices));
                 populateFilterDropdowns();
                 renderHistory();
@@ -1574,6 +3250,8 @@
                     const data = new Uint8Array(evt.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     let importedCount = 0;
+                    const existingInvSet = new Set(invoices.map(i => String(i.invoiceNo).trim().toLowerCase()));
+                    const skippedInv = new Set();
 
                     workbook.SheetNames.forEach(sheetName => {
                         const worksheet = workbook.Sheets[sheetName];
@@ -1582,7 +3260,7 @@
                         if (!jsonData || jsonData.length === 0) return;
 
                         let headerRowIndex = -1;
-                        let colIdx = { date: -1, invNo: -1, qty: -1, val: -1, margin: -1, tax: -1, net: -1 };
+                        let colIdx = { date: -1, invNo: -1, qty: -1, val: -1, margin: -1, tax: -1, net: -1, product: -1 };
 
                         for (let r = 0; r < Math.min(10, jsonData.length); r++) {
                             const row = jsonData[r];
@@ -1596,6 +3274,7 @@
                                 else if (val.includes('margin') || val.includes('disc')) colIdx.margin = c;
                                 else if (val.includes('tax')) colIdx.tax = c;
                                 else if (val.includes('total') || val.includes('net')) colIdx.net = c;
+                                else if (val.includes('product') || val.includes('item') || val.includes('description') || val.includes('sku')) colIdx.product = c;
                             }
                             if (colIdx.invNo !== -1) { headerRowIndex = r; break; }
                         }
@@ -1607,6 +3286,7 @@
                             if (!row) continue;
                             const invNo = String(row[colIdx.invNo] || '').trim();
                             if (!invNo || invNo.toLowerCase().includes('total')) continue;
+                            if (existingInvSet.has(invNo.toLowerCase())) { skippedInv.add(invNo); continue; }
 
                             let rawDate = row[colIdx.date];
                             let formattedDate = new Date().toISOString().split('T')[0];
@@ -1626,7 +3306,7 @@
                                 id: Date.now() + Math.random(),
                                 date: formattedDate,
                                 invoiceNo: invNo,
-                                productName: "COCA-COLA DISTRIBUTION ITEMS",
+                                productName: (colIdx.product !== -1 && String(row[colIdx.product] || '').trim()) || "COCA-COLA DISTRIBUTION ITEMS",
                                 qty: qty,
                                 rate: qty > 0 ? (gross / qty) : gross,
                                 gross: gross,
@@ -1639,14 +3319,21 @@
                     });
 
                     localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+                    updateProductDatalist();
                     populateFilterDropdowns();
                     renderHistory();
-                    statusEl.innerHTML = `✓ ${importedCount} Invoices imported!`;
+                    statusEl.innerHTML = `✓ ${importedCount} rows imported!` +
+                        (skippedInv.size ? `<br><span style="color:#ffc067;">⚠ ${skippedInv.size} انوائسز پہلے سے موجود تھیں، دوبارہ شامل نہیں کی گئیں۔</span>` : '');
+                    if (skippedInv.size) {
+                        const list = Array.from(skippedInv);
+                        alert(`${skippedInv.size} انوائسز پہلے سے سسٹم میں تھیں، اس لیے چھوڑ دی گئیں:\n` + list.slice(0, 15).join(', ') + (list.length > 15 ? ' ...' : ''));
+                    }
                 } catch (err) {
                     statusEl.innerHTML = `Error reading Excel file!`;
                 }
             };
             reader.readAsArrayBuffer(file);
+            e.target.value = '';
         }
 
         function exportToExcel() {
@@ -1655,11 +3342,20 @@
             XLSX.writeFile(wb, `Al_Qadir_Traders_Ledger.xlsx`);
         }
 
-        function exportBackup() {
-            const blob = new Blob([JSON.stringify({ invoices, systemUsers }, null, 2)], { type: "application/json" });
+        async function exportBackup() {
+            const data = { invoices, systemUsers, productCatalog };
+            let nPhotos = 0;
+            try { await refreshPhotoCounts(); nPhotos = Object.values(photoCounts).reduce((a, b) => a + b, 0); } catch (e) { }
+            if (nPhotos && confirm(`${nPhotos} انوائس تصاویر بھی بیک اپ میں شامل کریں؟\n(فائل بڑی ہو جائے گی، لیکن تصاویر محفوظ رہیں گی)\n\nOK = تصاویر سمیت    Cancel = صرف ڈیٹا`)) {
+                const st = await photoStore('readonly');
+                const all = await idbReq(st.getAll());
+                data.photos = [];
+                for (const p of all) data.photos.push({ invoiceNo: p.invoiceNo, page: p.page, addedAt: p.addedAt, data: await blobToDataUrl(p.blob) });
+            }
+            const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
             const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = `AlQadir_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `AlQadir_Backup_${new Date().toISOString().split('T')[0]}${data.photos ? '_with_photos' : ''}.json`;
             a.click();
         }
 
@@ -1677,6 +3373,21 @@
                     if (data.invoices) {
                         invoices = data.invoices;
                         localStorage.setItem('aq_invoices', JSON.stringify(invoices));
+                    }
+                    if (Array.isArray(data.photos) && data.photos.length &&
+                        confirm(`بیک اپ میں ${data.photos.length} تصاویر ہیں۔ انہیں بحال کریں؟ (موجودہ تصاویر کی جگہ آ جائیں گی)`)) {
+                        (async () => {
+                            const st0 = await photoStore('readwrite'); await idbReq(st0.clear());
+                            const blobs = [];
+                            for (const p of data.photos) blobs.push({ ...p, blob: await dataUrlToBlob(p.data) });
+                            const st = await photoStore('readwrite');
+                            for (const p of blobs) await idbReq(st.add({ invKey: invKeyOf(p.invoiceNo), invoiceNo: p.invoiceNo, page: p.page, blob: p.blob, addedAt: p.addedAt || Date.now() }));
+                            await refreshPhotoCounts(); renderHistory();
+                        })().catch(err => alert('تصاویر بحال نہیں ہو سکیں: ' + err.message));
+                    }
+                    if (data.productCatalog) {
+                        productCatalog = data.productCatalog;
+                        saveCatalog();
                     }
                     if (data.systemUsers) {
                         systemUsers = data.systemUsers;
